@@ -8,4 +8,5 @@ class TestApi(TestCase):
 
     def test_search(self):
         movie = self.service.get_movie('197671')
-        self.assertEqual(movie['title'], 'Piratas del Caribe: La venganza de Salazar')
+        self.assertEqual(
+            movie['title'], 'Piratas del Caribe: La venganza de Salazar')
