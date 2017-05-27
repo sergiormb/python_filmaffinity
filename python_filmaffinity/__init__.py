@@ -3,7 +3,8 @@ from bs4 import BeautifulSoup
 
 
 class Filmaffinity:
-        base_url = 'https://www.filmaffinity.com/'
+
+    base_url = 'https://www.filmaffinity.com/'
 
     def __init__(self, lang='es'):
         self.lang = lang
