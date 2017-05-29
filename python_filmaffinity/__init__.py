@@ -57,7 +57,7 @@ class Filmaffinity:
 
     def _get_poster(self, soup):
         image = soup.find("img", {"itemprop": 'image'})
-        return int(image['src'])
+        return str(image['src'])
 
     def get_movie(self, id_movie):
         """Return a dictionary with the data of the movie.
@@ -68,7 +68,7 @@ class Filmaffinity:
             TYPE: Dictionary with movie data
         """
         page = requests.get(self.url_film + str(id_movie) + '.html')
-        soup = BeautifulSoup(page.content, "html.parser")
+        soup = BeautifulSoup(page.text, "html.parser")
         movie = {
             'title': self._get_title(soup),
             'year': self._get_year(soup),
@@ -78,7 +78,28 @@ class Filmaffinity:
             'directors': self._get_directors(soup),
             'actors': self._get_actors(soup),
             'poster': self._get_poster(soup),
-
         }
 
         return movie
+
+    def search_movie(self, title):
+        options = '&stype=title&orderby=relevance'
+        page = requests.get(
+            self.url + 'search.php?stext=' + str(title) + options
+        )
+        soup = BeautifulSoup(page.text, "html.parser")
+        movies_cell = soup.find_all("div", {"class": 'movie-card'})
+        movies = []
+        for movie_cell in movies_cell:
+            title = movie_cell.find('div', {'class': 'mc-title'})
+            directors = []
+            director_cell = movie_cell.find('div', {'class': 'credits'})
+            director_cell = director_cell.find('span', {'class': 'nb'})
+            directors.append(director_cell.get_text())
+            movie = {
+                'title': title.get_text() if title else None,
+                'directors': directors if directors else None,
+                'id': str(movie_cell['data-movie-id']),
+            }
+            movies.append(movie)
+        return movies
