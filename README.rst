@@ -16,6 +16,14 @@ Using ``pip``:
 	pip install python_filmaffinity
 
 
+Dependencies
+============
+
+- requests >= 2.0.1
+- bs4 >= 0.0.1
+
+
+
 .. |travis| image:: http://img.shields.io/travis/sergiormb/python_filmaffinity/master.svg?style=flat-square
     :target: https://travis-ci.org/sergiormb/python_filmaffinity
 

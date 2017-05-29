@@ -100,3 +100,4 @@ travisci-test:
 	pep8 $(PYTEST_TARGET)
 	pylint -E $(COVERAGE_TARGET)
 	pytest tests/test.py
+	pytest tests/test.py --doctest-modules --pep8 coveralls -v --cov coveralls --cov-report term-missing

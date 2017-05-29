@@ -1,0 +1,22 @@
+Metadata-Version: 1.1
+Name: python-filmaffinity
+Version: 0.1
+Summary: Search for movies in Filmaffinity
+Home-page: https://github.com/sergiormb/python_filmaffinity
+Author: sergiormb
+Author-email: sergiormb88@gmail.com
+License: MIT
+Download-URL: https://github.com/sergiormb/python_filmaffinity/tarball/0.1
+Description: UNKNOWN
+Keywords: filmaffinity,movies,films
+Platform: UNKNOWN
+Classifier: Environment :: Web Environment
+Classifier: Intended Audience :: Developers
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.2
+Classifier: Programming Language :: Python :: 3.3
+Classifier: Programming Language :: Python :: 3.4

@@ -1,0 +1,10 @@
+README.rst
+setup.cfg
+setup.py
+python_filmaffinity/__init__.py
+python_filmaffinity.egg-info/PKG-INFO
+python_filmaffinity.egg-info/SOURCES.txt
+python_filmaffinity.egg-info/dependency_links.txt
+python_filmaffinity.egg-info/not-zip-safe
+python_filmaffinity.egg-info/requires.txt
+python_filmaffinity.egg-info/top_level.txt
