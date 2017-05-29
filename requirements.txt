@@ -1,3 +1,4 @@
+setuptools==28.8.0
 aarpy==0.1
 appdirs==1.4.3
 astroid==1.5.2
