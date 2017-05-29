@@ -2,7 +2,7 @@
 python_filmaffinity
 *******
 
-|version| |travis| |coveralls| |license|
+|travis| |coveralls| |license|
 
 
 Installation
@@ -22,5 +22,5 @@ Using ``pip``:
 .. |coveralls| image:: http://img.shields.io/coveralls/sergiormb/python_filmaffinity/master.svg?style=flat-square
     :target: https://coveralls.io/r/sergiormb/python_filmaffinity
 
-.. |license| image:: http://img.shields.io/pypi/l/python_filmaffinity?style=flat-square
+.. |license| image:: https://img.shields.io/badge/license-MIT-blue.svg
     :target: https://pypi.python.org/pypi/python_filmaffinity
