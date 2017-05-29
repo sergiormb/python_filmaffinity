@@ -1,5 +1,5 @@
 *******
-python-filmaffinity
+python_filmaffinity
 *******
 
 |version| |travis| |coveralls| |license|
