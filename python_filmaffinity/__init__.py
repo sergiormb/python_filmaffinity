@@ -7,6 +7,11 @@ class Filmaffinity:
     base_url = 'https://www.filmaffinity.com/'
 
     def __init__(self, lang='es'):
+        """Init the search service.
+
+        Args:
+            lang (str, optional): Language of the page
+        """
         self.lang = lang
         self.url = self.base_url + self.lang + '/'
         self.url_film = self.url + 'film'
@@ -34,7 +39,34 @@ class Filmaffinity:
         votes = soup.find("span", {"itemprop": 'ratingCount'})
         return int(votes['content'])
 
+    def _get_directors(self, soup):
+        directors = []
+        directors_cell = soup.find_all("span", {"class": 'director'})
+        for director_cell in directors_cell:
+            director = director_cell.find("span", {"itemprop": 'name'})
+            directors.append(director.get_text())
+        return directors
+
+    def _get_actors(self, soup):
+        actors = []
+        actors_cell = soup.find_all("span", {"itemprop": 'actor'})
+        for actor_cell in actors_cell:
+            actor = actor_cell.find("span", {"itemprop": 'name'})
+            actors.append(actor.get_text())
+        return actors
+
+    def _get_poster(self, soup):
+        image = soup.find("img", {"itemprop": 'image'})
+        return int(image['src'])
+
     def get_movie(self, id_movie):
+        """Return a dictionary with the data of the movie.
+
+        Args:
+            id_movie (str, int): Filmaffinity identifier
+        Returns:
+            TYPE: Dictionary with movie data
+        """
         page = requests.get(self.url_film + str(id_movie) + '.html')
         soup = BeautifulSoup(page.content, "html.parser")
         movie = {
@@ -43,6 +75,10 @@ class Filmaffinity:
             'rating': self._get_rating(soup),
             'votes': self._get_number_of_votes(soup),
             'description': self._get_description(soup),
+            'directors': self._get_directors(soup),
+            'actors': self._get_actors(soup),
+            'poster': self._get_poster(soup),
+
         }
 
         return movie

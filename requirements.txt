@@ -23,6 +23,7 @@ ptyprocess==0.5.1
 Pygments==2.2.0
 pylint==1.7.1
 pyparsing==2.2.0
+pytest==3.1.0
 requests==2.14.2
 scandir==1.5
 simplegeneric==0.8.1
