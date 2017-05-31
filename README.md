@@ -79,7 +79,7 @@ Celda 211
 
 ## Changelog
 
-### v0.0.2 (29-05-2017)
+### v0.0.2 (31-05-2017)
 
 - Search movies by title, year, director or cast.
 - Get the filmaffinity top and search by year
