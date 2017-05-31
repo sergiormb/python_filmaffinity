@@ -21,6 +21,4 @@ python_filmaffinity.egg-info/
 
 .eggs/
 
-test.py
-
 .coverage
