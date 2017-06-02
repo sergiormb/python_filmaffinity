@@ -73,6 +73,24 @@ Examples
 Usage
 =====
 
+language
+********
+
+- Spanish: 'es'
+- USA, UK: 'en'
+- México: 'mx'
+- Argentina: 'ar'
+- Chile: 'cl'
+- Colombia: 'co'
+
+
+- Example
+
+.. code-block:: python
+
+    import python_filmaffinity
+    service = python_filmaffinity.Filmaffinity(lang='en')
+
 
 search
 ******
