@@ -16,7 +16,7 @@ def read(fname):
 
 
 meta = {}
-exec(read('__meta__.py'), meta)
+exec(read('python_filmaffinity/__meta__.py'), meta)
 
 setup(
     name=meta['__title__'],
@@ -34,7 +34,7 @@ setup(
     install_requires=meta['__install_requires__'],
     zip_safe=False,
     # use the URL to the github repo
-    download_url='https://github.com/sergiormb/python_filmaffinity/tarball/0.0.2',
+    download_url='https://github.com/sergiormb/python_filmaffinity/tarball/0.0.3',
     keywords='filmaffinity movies films',
     classifiers=[
         'Environment :: Web Environment',

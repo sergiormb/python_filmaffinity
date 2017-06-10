@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import requests
+import random
 from bs4 import BeautifulSoup
 
 FIELDS_MOVIE = ['title', 'id']
@@ -27,6 +28,11 @@ class Filmaffinity:
 
     def _get_title_by_search(self, soup):
         title = soup.find('div', {'class': 'mc-title'})
+        return title.get_text() if title else None
+
+    def _get_title_by_top(self, soup):
+        title_cell = soup.find('div', {'class': 'mc-right'})
+        title = title_cell.find('h3')
         return title.get_text() if title else None
 
     def _get_year(self, soup):
@@ -182,7 +188,7 @@ class Filmaffinity:
                 movies.append(movie)
         return movies
 
-    def top_filmaffinity(self, **kwargs):
+    def top_filmaffinity(self, top=10, **kwargs):
         """Return a list with the top filmaffinity movies.
 
         Args:
@@ -207,7 +213,7 @@ class Filmaffinity:
         page = requests.get(url)
         soup = BeautifulSoup(page.text, "html.parser")
         movies_cell = soup.find_all("div", {"class": 'movie-card'})
-        for cell in movies_cell:
+        for cell in movies_cell[:top]:
             movie = {
                 'title': self._get_title_by_search(cell),
                 'directors': self._get_directors_by_search(cell),
@@ -217,7 +223,7 @@ class Filmaffinity:
             movies.append(movie)
         return movies
 
-    def top_premieres(self):
+    def top_premieres(self, top=10):
         """Return a list with the top filmaffinity movies.
 
         Args:
@@ -232,12 +238,96 @@ class Filmaffinity:
         page = requests.get(url)
         soup = BeautifulSoup(page.text, "html.parser")
         movies_cell = soup.find_all("div", {"class": 'movie-card'})
-        for cell in movies_cell:
+        for cell in movies_cell[:top]:
             movie = {
-                'title': self._get_title_by_search(cell),
+                'title': self._get_title_by_top(cell),
                 'directors': self._get_directors_by_search(cell),
                 'id': str(cell['data-movie-id']),
                 'poster': self._get_poster_by_search(cell),
             }
             movies.append(movie)
+        return movies
+
+    def _top_service(self, top, service):
+        movies = []
+        if self.lang == 'es':
+            top = 40 if top > 40 else top
+            url = self.url + 'topcat.php?id=' + service
+            page = requests.get(url)
+            soup = BeautifulSoup(page.text, "html.parser")
+            movies_cell = soup.find_all("div", {"class": 'movie-card'})
+            for cell in movies_cell[:top]:
+                movie = {
+                    'title': self._get_title_by_top(cell),
+                    'directors': self._get_directors_by_search(cell),
+                    'id': str(cell['data-movie-id']),
+                    'poster': self._get_poster_by_search(cell),
+                }
+                movies.append(movie)
+        return movies
+
+    def top_netflix(self, top=10):
+        """Return a list with the top netflix movies.
+
+        Returns:
+            TYPE: Lis with movies data
+        """
+        movies = self._top_service(top, 'new_netflix')
+        return movies
+
+    def top_hbo(self, top=10):
+        """Return a list with the top hbo movies.
+
+        Returns:
+            TYPE: Lis with movies data
+        """
+        movies = self._top_service(top, 'new_hbo_es')
+        return movies
+
+    def top_filmin(self, top=10):
+        """Return a list with the top filmin movies.
+
+        Returns:
+            TYPE: Lis with movies data
+        """
+        movies = self._top_service(top, 'new_filmin')
+        return movies
+
+    def _recommend(self, service):
+        movie = {}
+        if self.lang == 'es':
+            url = self.url + 'topcat.php?id=' + service
+            page = requests.get(url)
+            soup = BeautifulSoup(page.text, "html.parser")
+            movies_cell = soup.find_all("div", {"class": 'movie-card'})
+            cell = random.choice(movies_cell)
+            id = str(cell['data-movie-id'])
+            movie = self._get_movie_by_id(id)
+        return movie
+
+    def recommend_netflix(self):
+        """Return a movie random in Netflix.
+
+        Returns:
+            TYPE: Movie data
+        """
+        movies = self._recommend('new_netflix')
+        return movies
+
+    def recommend_hbo(self):
+        """Return a movie random in HBO.
+
+        Returns:
+            TYPE: Movie data
+        """
+        movies = self._recommend('new_hbo_es')
+        return movies
+
+    def recommend_filmin(self):
+        """Return a movie random in Filmin.
+
+        Returns:
+            TYPE: Movie data
+        """
+        movies = self._recommend('new_filmin')
         return movies

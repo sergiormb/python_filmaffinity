@@ -136,6 +136,8 @@ top_filmaffinity
 +-----------+----------+--------+-----------------------------------+
 | to_year   |   False  | String | Search end date                   |
 +-----------+----------+--------+-----------------------------------+
+| top       |   False  | Integer| Number of elements                |
++-----------+----------+--------+-----------------------------------+
 
 - Example
 
@@ -148,6 +150,12 @@ top_filmaffinity
 top_premieres
 *************
 
++-----------+----------+--------+-----------------------------------+
+| Parameter | Required |   Type | Description                       |
++===========+==========+========+===================================+
+| top       |   False  | Integer| Number of elements                |
++-----------+----------+--------+-----------------------------------+
+
 - Example
 
 .. code-block:: python
@@ -155,8 +163,46 @@ top_premieres
     movies = service.top_premieres()
 
 
+top_netflix, top_hbo, top_filmin
+********************************
+
++-----------+----------+--------+-----------------------------------+
+| Parameter | Required |   Type | Description                       |
++===========+==========+========+===================================+
+| top       |   False  | Integer| Number of elements                |
++-----------+----------+--------+-----------------------------------+
+
+- Example
+
+.. code-block:: python
+
+    movies = service.top_netflix()
+    movies = service.top_hbo(top=5)
+    movies = service.top_filmin()
+
+
+recommend HBO, Netflix, Filmin
+******************************
+
+- Example
+
+.. code-block:: python
+
+    movies = service.recommend_netflix()
+    movies = service.recommend_hbo()
+    movies = service.recommend_filmin()
+
+
 Changelog
 =========
+
+
+v0.0.3 (10-06-2017)
+*******************
+
+- Top Netlfix, HBO and Filmin
+- Recommendation from Netflix, HBO or Filmin
+- Fixed errors
 
 
 v0.0.2 (31-05-2017)
