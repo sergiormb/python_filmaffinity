@@ -61,6 +61,7 @@ Examples
     movie['actors']
     ['Luis Tosar', 'Alberto Ammann', 'Antonio Resines', 'Carlos Bardem', 'Marta Etura', 'Vicente Romero', 'Manuel Morón', 'Manolo Solo', 'Fernando Soto', 'Luis Zahera', 'Patxi Bisquert', 'Félix Cubero', 'Josean Bengoetxea', 'Juan Carlos Mangas', 'Jesús Carroza']
 
+
 Usage
 =====
 
@@ -117,6 +118,8 @@ get_movie
 +-----------+----------+--------+-----------------------------------+
 | title     |   False  | String | Get movie by title                |
 +-----------+----------+--------+-----------------------------------+
+| trailer   |   False  | Boolean| Return movie with trailer         |
++-----------+----------+--------+-----------------------------------+
 
 - Example
 
@@ -163,8 +166,8 @@ top_premieres
     movies = service.top_premieres()
 
 
-top_netflix, top_hbo, top_filmin
-********************************
+top_netflix, top_hbo, top_filmin, top_tv_series
+***********************************************
 
 +-----------+----------+--------+-----------------------------------+
 | Parameter | Required |   Type | Description                       |
@@ -179,10 +182,17 @@ top_netflix, top_hbo, top_filmin
     movies = service.top_netflix()
     movies = service.top_hbo(top=5)
     movies = service.top_filmin()
+    movies = service.top_tv_series()
 
 
 recommend HBO, Netflix, Filmin
 ******************************
+
++-----------+----------+--------+-----------------------------------+
+| Parameter | Required |   Type | Description                       |
++===========+==========+========+===================================+
+| trailer   |   False  | Boolean| Return movie with trailer         |
++-----------+----------+--------+-----------------------------------+
 
 - Example
 
@@ -195,6 +205,14 @@ recommend HBO, Netflix, Filmin
 
 Changelog
 =========
+
+v0.0.4 (12-06-2017)
+*******************
+
+- Top new DVDs
+- Get movie with trailer
+- Top TV series
+- Return movies list with raiting
 
 
 v0.0.3 (10-06-2017)
@@ -217,7 +235,6 @@ v0.0.1 (29-05-2017)
 *******************
 
 - Initial release.
-
 
 
 Authors

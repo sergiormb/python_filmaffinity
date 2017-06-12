@@ -24,6 +24,18 @@ class TestApi(TestCase):
         movies = self.service.top_filmaffinity()
         self.assertNotEqual(0, len(movies))
 
+    def test_top_series(self):
+        movies = self.service.top_tv_series()
+        self.assertNotEqual(0, len(movies))
+        self.assertNotEqual(len(movies[0]['title']), None)
+        movies = self.service.top_tv_series(top=20)
+        self.assertEqual(len(movies), 20)
+        movies = self.service.top_tv_series(top=80)
+        self.assertEqual(len(movies), 30)
+        movies = self.service.top_tv_series(from_year='2010', to_year='2011')
+        self.assertNotEqual(0, len(movies))
+        self.assertNotEqual(len(movies[0]['title']), None)
+
     def test_top_premieres(self):
         movies = self.service.top_premieres()
         self.assertNotEqual(0, len(movies))
@@ -50,6 +62,7 @@ class TestApi(TestCase):
         movies = self.service.top_netflix(top=10)
         self.assertEqual(len(movies), 10)
         self.assertNotEqual(len(movies[0]['title']), None)
+        self.assertNotEqual(len(movies[0]['rating']), None)
 
     def test_top_hbo(self):
         movies = self.service.top_hbo(top=10)
@@ -60,6 +73,7 @@ class TestApi(TestCase):
         movies = self.service.top_filmin(top=10)
         self.assertEqual(len(movies), 10)
         self.assertNotEqual(len(movies[0]['title']), None)
+        self.assertNotEqual(len(movies[0]['rating']), None)
 
     def test_recommend_netflix(self):
         movie = self.service.recommend_netflix()
@@ -72,3 +86,17 @@ class TestApi(TestCase):
     def test_recommend_filmin(self):
         movie = self.service.recommend_filmin()
         self.assertNotEqual(len(movie['title']), None)
+
+    def test_trailer(self):
+        movie = self.service.recommend_netflix(trailer=True)
+        self.assertNotEqual(len(movie['trailer']), None)
+
+    def test_top_dvd(self):
+        movies = self.service.top_netflix(top=10)
+        self.assertEqual(len(movies), 10)
+        self.assertNotEqual(len(movies[0]['title']), None)
+        movies = self.service.top_netflix(top=20)
+        self.assertEqual(len(movies), 20)
+        movies = self.service.top_netflix(top=80)
+        self.assertEqual(len(movies), 40)
+        self.assertNotEqual(len(movies[0]['rating']), None)

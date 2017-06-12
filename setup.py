@@ -34,7 +34,7 @@ setup(
     install_requires=meta['__install_requires__'],
     zip_safe=False,
     # use the URL to the github repo
-    download_url='https://github.com/sergiormb/python_filmaffinity/tarball/0.0.3',
+    download_url='https://github.com/sergiormb/python_filmaffinity/tarball/0.0.4',
     keywords='filmaffinity movies films',
     classifiers=[
         'Environment :: Web Environment',
