@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
+#! /usr/bin/env python
+
 import requests
 import random
-#! /usr/bin/env python
 
 try:
     from urllib import quote  # Python 2.X
