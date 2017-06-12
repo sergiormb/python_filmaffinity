@@ -127,9 +127,9 @@ class Filmaffinity(Client):
         top = 40 if top > 40 else top
         movies = []
         if self.lang == 'es':
-            url = 'topcat_new_sa_es.html'
+            url = self.url + 'topcat_new_sa_es.html'
         else:
-            url = 'topcat_DVD_VID_US.html'
+            url = self.url + 'topcat_DVD_VID_US.html'
         page = requests.get(url)
         movies = self._return_list_movies(page, top)
         return movies

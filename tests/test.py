@@ -92,11 +92,11 @@ class TestApi(TestCase):
         self.assertNotEqual(len(movie['trailer']), None)
 
     def test_top_dvd(self):
-        movies = self.service.top_netflix(top=10)
+        movies = self.service.top_dvd(top=10)
         self.assertEqual(len(movies), 10)
         self.assertNotEqual(len(movies[0]['title']), None)
-        movies = self.service.top_netflix(top=20)
+        movies = self.service.top_dvd(top=20)
         self.assertEqual(len(movies), 20)
-        movies = self.service.top_netflix(top=80)
+        movies = self.service.top_dvd(top=80)
         self.assertEqual(len(movies), 40)
         self.assertNotEqual(len(movies[0]['rating']), None)
