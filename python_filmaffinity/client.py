@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 import requests
 import random
-import urllib
+#! /usr/bin/env python
+
+try:
+    from urllib import quote  # Python 2.X
+except ImportError:
+    from urllib.parse import quote  # Python 3+
 from bs4 import BeautifulSoup
 from .config import FIELDS_MOVIE
 
@@ -64,7 +69,7 @@ class Client:
 
     def _get_trailer(self, title):
         title += ' trailer'
-        title = urllib.quote(title)
+        title = quote(title)
         page = requests.get(self.url_youtube + str(title))
         soup = BeautifulSoup(page.text, "html.parser")
         vid = soup.findAll(attrs={'class': 'yt-uix-tile-link'})[0]
