@@ -206,7 +206,12 @@ recommend HBO, Netflix, Filmin
 Changelog
 =========
 
-v0.0.4 (12-06-2017)
+v0.0.5 (12-06-2017)
+*******************
+
+- Fixed errors
+
+v0.0.4 (11-06-2017)
 *******************
 
 - Top new DVDs
