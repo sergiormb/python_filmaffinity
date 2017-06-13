@@ -206,7 +206,7 @@ recommend HBO, Netflix, Filmin
 Changelog
 =========
 
-v0.0.5 (12-06-2017)
+v0.0.5 (13-06-2017)
 *******************
 
 - Fixed errors
