@@ -6,6 +6,7 @@ backports.functools-lru-cache==1.4
 backports.shutil-get-terminal-size==1.0.0
 beautifulsoup4==4.6.0
 bs4==0.0.1
+cachetools==1.1.5
 configparser==3.5.0
 coveralls==1.1
 decorator==4.0.11

@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
-#! /usr/bin/env python
 
 import requests
 import random
+from functools import partial
+from cachetools import cached, hashkey
 
 try:
     from urllib import quote  # Python 2.X
 except ImportError:
     from urllib.parse import quote  # Python 3+
 from bs4 import BeautifulSoup
-from .config import FIELDS_MOVIE
+from .config import cache, FIELDS_MOVIE
+from .pages import DetailPage, SearchPage, TopPage, TopServicePage
 
 
 class Client:
@@ -26,48 +28,6 @@ class Client:
         self.url_film = self.url + 'film'
         self.url_youtube = 'https://www.youtube.com/results?search_query='
 
-    def _get_title(self, soup):
-        name_cell = soup.find("span", {"itemprop": 'name'})
-        name = name_cell.get_text()
-        return name
-
-    def _get_title_by_search(self, soup):
-        title = soup.find('div', {'class': 'mc-title'})
-        return title.get_text() if title else None
-
-    def _get_title_by_top(self, soup):
-        title_cell = soup.find('div', {'class': 'mc-right'})
-        title = title_cell.find('h3')
-        return title.get_text() if title else None
-
-    def _get_year(self, soup):
-        year_cell = soup.find("dd", {"itemprop": 'datePublished'})
-        year = year_cell.get_text()
-        return year
-
-    def _get_description(self, soup):
-        description_cell = soup.find("dd", {"itemprop": 'description'})
-        description = description_cell.get_text()
-        return description
-
-    def _get_rating(self, soup):
-        rating = soup.find("div", {"id": 'movie-rat-avg'})
-        if rating:
-            try:
-                rating = float(rating['content'])
-            except ValueError:
-                rating = None
-        return rating
-
-    def _get_rating_by_search(self, soup):
-        rating = soup.find("div", {"class": 'avg-rating'})
-        if rating:
-            try:
-                rating = float(rating.get_text())
-            except ValueError:
-                rating = rating.get_text()
-        return rating
-
     def _get_trailer(self, title):
         title += ' trailer'
         title = quote(title)
@@ -76,67 +36,24 @@ class Client:
         vid = soup.findAll(attrs={'class': 'yt-uix-tile-link'})[0]
         return 'https://www.youtube.com' + vid['href']
 
-    def _get_number_of_votes(self, soup):
-        votes = soup.find("span", {"itemprop": 'ratingCount'})
-        if votes:
-            try:
-                votes = int(votes['content'])
-            except ValueError:
-                votes = None
-        return votes
-
-    def _get_directors(self, soup):
-        directors = []
-        directors_cell = soup.find_all("span", {"class": 'director'})
-        for director_cell in directors_cell:
-            director = director_cell.find("span", {"itemprop": 'name'})
-            directors.append(director.get_text())
-        return directors
-
-    def _get_directors_by_search(self, soup):
-        directors = []
-        director_cell = soup.find('div', {'class': 'credits'})
-        director_cell = director_cell.find('span', {'class': 'nb'})
-        directors.append(director_cell.get_text())
-        return directors if directors else None
-
-    def _get_actors(self, soup):
-        actors = []
-        actors_cell = soup.find_all("span", {"itemprop": 'actor'})
-        for actor_cell in actors_cell:
-            actor = actor_cell.find("span", {"itemprop": 'name'})
-            actors.append(actor.get_text())
-        return actors
-
-    def _get_poster(self, soup):
-        image = soup.find("img", {"itemprop": 'image'})
-        if image:
-            try:
-                image = str(image['src'])
-            except ValueError:
-                image = None
-        return image
-
-    def _get_poster_by_search(self, soup):
-        poster = soup.find('div', {'class': 'mc-poster'})
-        poster_img = poster.find('img')
-        return poster_img['src']
-
+    @cached(cache, key=partial(hashkey, id))
     def _get_movie_by_id(self, id, trailer=False):
         movie = {}
         page = requests.get(self.url_film + str(id) + '.html')
         soup = BeautifulSoup(page.text, "html.parser")
         exist = soup.find_all("div", {"class": 'z-movie'})
         if exist:
+            page = DetailPage(soup)
             movie = {
-                'title': self._get_title(soup),
-                'year': self._get_year(soup),
-                'rating': self._get_rating(soup),
-                'votes': self._get_number_of_votes(soup),
-                'description': self._get_description(soup),
-                'directors': self._get_directors(soup),
-                'actors': self._get_actors(soup),
-                'poster': self._get_poster(soup),
+                'id': id,
+                'title': page.get_title(),
+                'year': page.get_year(),
+                'rating': page.get_rating(),
+                'votes': page.get_number_of_votes(),
+                'description': page.get_description(),
+                'directors': page.get_directors(),
+                'actors': page.get_actors(),
+                'poster': page.get_poster(),
             }
             if trailer:
                 movie.update({'trailer': self._get_trailer(movie['title'])})
@@ -155,20 +72,30 @@ class Client:
             if movies_cell:
                 cell = movies_cell[0]
                 id = str(cell['data-movie-id'])
-                movie = self._get_movie_by_id(id, trailer)
+                movie = self._get_movie_by_id(id, 'search')
         return movie
 
-    def _return_list_movies(self, page, top=10, from_search=False):
+    def _return_list_movies(self, page, method, top=10):
         movies = []
         soup = BeautifulSoup(page.text, "html.parser")
-        movies_cell = soup.find_all("div", {"class": 'movie-card'})
+        if method == 'top':
+            movies_list = soup.find("ul", {"id": 'top-movies'})
+            movies_cell = movies_list.find_all("li", {"class": None, "id": None})
+            class_ = TopPage
+        if method == 'search':
+            movies_cell = soup.find_all("div", {"class": 'movie-card'})
+            class_ = SearchPage
+        if method == 'top_service':
+            movies_cell = soup.find_all("div", {"class": 'movie-card'})
+            class_ = TopServicePage
         for cell in movies_cell[:top]:
+            page = class_(cell)
             movie = {
-                'title': self._get_title_by_top(cell) if not from_search else self._get_title_by_search(cell),
-                'directors': self._get_directors_by_search(cell),
-                'id': str(cell['data-movie-id']),
-                'poster': self._get_poster_by_search(cell),
-                'rating': self._get_rating_by_search(cell),
+                'title': page.get_title(),
+                'directors': page.get_directors(),
+                'id': page.get_id(),
+                'poster': page.get_poster(),
+                'rating': page.get_rating(),
             }
             movies.append(movie)
         return movies
@@ -191,5 +118,5 @@ class Client:
             top = 40 if top > 40 else top
             url = self.url + 'topcat.php?id=' + service
             page = requests.get(url)
-            movies = self._return_list_movies(page, top)
+            movies = self._return_list_movies(page=page, top=top, method='top_service')
         return movies
