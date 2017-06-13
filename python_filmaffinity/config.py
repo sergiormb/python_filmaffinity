@@ -1,3 +1,4 @@
+"""Config."""
 # -*- coding: utf-8 -*-
 from cachetools import LRUCache
 
@@ -7,4 +8,5 @@ FIELDS_TYPE = ['title', 'director', 'cast']
 
 
 FIELDS_PAGE_MOVIES = ['id', 'title', 'rating', 'directors', 'poster']
-FIELDS_PAGE_DETAIL = FIELDS_PAGE_MOVIES + ['description', 'votes', 'year', 'actors']
+FIELDS_DETAIL = ['description', 'votes', 'year', 'actors']
+FIELDS_PAGE_DETAIL = FIELDS_PAGE_MOVIES + FIELDS_DETAIL

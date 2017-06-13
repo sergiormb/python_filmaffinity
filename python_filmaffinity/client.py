@@ -1,3 +1,4 @@
+"""Client."""
 # -*- coding: utf-8 -*-
 
 import requests
@@ -15,6 +16,8 @@ from .pages import DetailPage, SearchPage, TopPage, TopServicePage
 
 
 class Client:
+    """Client to make requests to Filmaffinity."""
+
     base_url = 'https://www.filmaffinity.com/'
 
     def __init__(self, lang='es'):
@@ -80,7 +83,9 @@ class Client:
         soup = BeautifulSoup(page.text, "html.parser")
         if method == 'top':
             movies_list = soup.find("ul", {"id": 'top-movies'})
-            movies_cell = movies_list.find_all("li", {"class": None, "id": None})
+            movies_cell = movies_list.find_all(
+                "li", {"class": None, "id": None}
+            )
             class_ = TopPage
         if method == 'search':
             movies_cell = soup.find_all("div", {"class": 'movie-card'})
@@ -118,5 +123,5 @@ class Client:
             top = 40 if top > 40 else top
             url = self.url + 'topcat.php?id=' + service
             page = requests.get(url)
-            movies = self._return_list_movies(page=page, top=top, method='top_service')
+            movies = self._return_list_movies(page, 'top_service', top)
         return movies
