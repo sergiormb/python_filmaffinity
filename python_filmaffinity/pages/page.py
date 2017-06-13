@@ -1,13 +1,24 @@
 class Page(object):
+    """This is a simple python scraping.
 
+    Attributes:
+        soup (TYPE): Page analyzed by BeautifulSoup.
+    """
     def __init__(self, soup):
+        """Init the class.
+
+        Args:
+            soup (TYPE): Page analyzed by BeautifulSoup
+        """
         self.soup = soup
 
     def get_title(self):
+        """Get title."""
         title = self.soup.find('div', {'class': 'mc-title'})
         return title.get_text() if title else None
 
     def get_rating(self):
+        """Get rating."""
         rating = self.soup.find("div", {"class": 'avg-rating'})
         if rating:
             try:
@@ -17,6 +28,7 @@ class Page(object):
         return rating
 
     def get_directors(self):
+        """Get directors."""
         directors = []
         director_cell = self.soup.find('div', {'class': 'credits'})
         if director_cell:
@@ -25,6 +37,7 @@ class Page(object):
         return directors if directors else None
 
     def get_poster(self):
+        """Get poster."""
         poster_img = None
         poster = self.soup.find('div', {'class': 'mc-poster'})
         if poster:
