@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
+
 import requests
 from functools import partial
+
+from .client import Client
+from .config import FIELDS_TYPE, cache
+
 from cachetools import __version__ as cachetools_version
 from .client import Client
 from .config import FIELDS_TYPE, cache
@@ -32,7 +37,7 @@ class Filmaffinity(Client):
                     movie = self._get_movie_by_args(key, value, trailer)
         return movie
 
-    def search(self, **kwargs):
+    def search(self, top=10, **kwargs):
         """Return a list with the data of the movies.
 
         Args:
@@ -44,6 +49,7 @@ class Filmaffinity(Client):
         Returns:
             TYPE: Lis with movies data
         """
+        top = 20 if top > 20 else top
         movies = []
         if kwargs is not None:
             options = ''
@@ -56,7 +62,7 @@ class Filmaffinity(Client):
                     options += 'toyear=%s&' % value
             url = self.url + 'advsearch.php?' + options
             page = requests.get(url)
-            movies = self._return_list_movies(page, 'search')
+            movies = self._return_list_movies(page, 'search', top)
         return movies
 
     @cached(cache, key=partial(hashkey, 'top_filmaffinity'))

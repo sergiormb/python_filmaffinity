@@ -4,15 +4,22 @@
 import requests
 import random
 from functools import partial
-from cachetools import cached, hashkey
+from bs4 import BeautifulSoup
+
+from .config import cache, FIELDS_MOVIE
+from .pages import DetailPage, SearchPage, TopPage, TopServicePage
+
+from cachetools import __version__ as cachetools_version
+if int(cachetools_version.split('.')[0]) >= 2:
+    from cachetools import cached
+    from cachetools.keys import hashkey
+else:
+    from cachetools import cached, hashkey
 
 try:
     from urllib import quote  # Python 2.X
 except ImportError:
     from urllib.parse import quote  # Python 3+
-from bs4 import BeautifulSoup
-from .config import cache, FIELDS_MOVIE
-from .pages import DetailPage, SearchPage, TopPage, TopServicePage
 
 
 class Client:
