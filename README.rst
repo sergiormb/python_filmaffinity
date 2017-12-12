@@ -206,6 +206,11 @@ recommend HBO, Netflix, Filmin
 Changelog
 =========
 
+v0.0.6 (13-06-2017)
+*******************
+
+- Add cachetools
+
 v0.0.5 (13-06-2017)
 *******************
 
