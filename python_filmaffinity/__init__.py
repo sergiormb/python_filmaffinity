@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
+
 import requests
 from functools import partial
+
+from .client import Client
+from .config import FIELDS_TYPE, cache
+
 from cachetools import __version__ as cachetools_version
 if int(cachetools_version.split('.')[0]) >= 2:
     from cachetools import cached
     from cachetools.keys import hashkey
 else:
     from cachetools import cached, hashkey
-
-from .client import Client
-from .config import FIELDS_TYPE, cache
 
 
 class Filmaffinity(Client):
