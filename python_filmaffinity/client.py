@@ -75,7 +75,7 @@ class Client:
         if key in FIELDS_MOVIE:
             options = '&stype[]=%s' % key
             url = self.url + 'advsearch.php?stext=' + \
-                  str(value) + options
+                str(value) + options
             page = requests.get(url)
             soup = BeautifulSoup(page.text, "html.parser")
             movies_cell = soup.find_all("div", {"class": 'movie-card-1'})
