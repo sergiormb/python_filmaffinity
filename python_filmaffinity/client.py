@@ -121,21 +121,19 @@ class Client:
 
     def _recommend(self, service, trailer=False):
         movie = {}
-        if self.lang == 'es':
-            url = self.url + 'topcat.php?id=' + service
-            page = requests.get(url)
-            soup = BeautifulSoup(page.text, "html.parser")
-            movies_cell = soup.find_all("div", {"class": 'movie-card'})
-            cell = random.choice(movies_cell)
-            id = str(cell['data-movie-id'])
-            movie = self._get_movie_by_id(id, trailer)
+        url = self.url + 'topcat.php?id=' + service
+        page = requests.get(url)
+        soup = BeautifulSoup(page.text, "html.parser")
+        movies_cell = soup.find_all("div", {"class": 'movie-card'})
+        cell = random.choice(movies_cell)
+        id = str(cell['data-movie-id'])
+        movie = self._get_movie_by_id(id, trailer)
         return movie
 
     def _top_service(self, top, service):
         movies = []
-        if self.lang == 'es':
-            top = 40 if top > 40 else top
-            url = self.url + 'topcat.php?id=' + service
-            page = requests.get(url)
-            movies = self._return_list_movies(page, 'top_service', top)
+        top = 40 if top > 40 else top
+        url = self.url + 'topcat.php?id=' + service
+        page = requests.get(url)
+        movies = self._return_list_movies(page, 'top_service', top)
         return movies
