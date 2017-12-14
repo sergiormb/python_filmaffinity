@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 
 from .config import cache, FIELDS_MOVIE
 from .pages import DetailPage, SearchPage, TopPage, TopServicePage
+from .exceptions import FilmAffinityInvalidLanguage
 
 from cachetools import __version__ as cachetools_version
 if int(cachetools_version.split('.')[0]) >= 2:
@@ -22,6 +23,9 @@ except ImportError:
     from urllib.parse import quote  # Python 3+
 
 
+supported_languages = ['en', 'es', 'mx', 'ar', 'cl', 'co']
+
+
 class Client:
     """Client to make requests to Filmaffinity."""
 
@@ -33,6 +37,9 @@ class Client:
         Args:
             lang (str, optional): Language of the page
         """
+        if lang not in supported_languages:
+            raise FilmAffinityInvalidLanguage(
+                lang, supported_languages)
         self.lang = lang
         self.url = self.base_url + self.lang + '/'
         self.url_film = self.url + 'film'
