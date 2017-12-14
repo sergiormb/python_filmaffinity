@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 
 from .config import cache, FIELDS_MOVIE
 from .pages import DetailPage, SearchPage, TopPage, TopServicePage
+from .exceptions import FilmAffinityInvalidLanguage
 
 from cachetools import __version__ as cachetools_version
 if int(cachetools_version.split('.')[0]) >= 2:
@@ -22,6 +23,9 @@ except ImportError:
     from urllib.parse import quote  # Python 3+
 
 
+supported_languages = ['en', 'es', 'mx', 'ar', 'cl', 'co']
+
+
 class Client:
     """Client to make requests to Filmaffinity."""
 
@@ -33,6 +37,9 @@ class Client:
         Args:
             lang (str, optional): Language of the page
         """
+        if lang not in supported_languages:
+            raise FilmAffinityInvalidLanguage(
+                lang, supported_languages)
         self.lang = lang
         self.url = self.base_url + self.lang + '/'
         self.url_film = self.url + 'film'
@@ -42,7 +49,7 @@ class Client:
         title += ' trailer'
         title = quote(title)
         page = requests.get(self.url_youtube + str(title))
-        soup = BeautifulSoup(page.text, "html.parser")
+        soup = BeautifulSoup(page.content, "html.parser")
         vid = soup.findAll(attrs={'class': 'yt-uix-tile-link'})[0]
         return 'https://www.youtube.com' + vid['href']
 
@@ -50,7 +57,7 @@ class Client:
     def _get_movie_by_id(self, id, trailer=False):
         movie = {}
         page = requests.get(self.url_film + str(id) + '.html')
-        soup = BeautifulSoup(page.text, "html.parser")
+        soup = BeautifulSoup(page.content, "html.parser")
         exist = soup.find_all("div", {"class": 'z-movie'})
         if exist:
             page = DetailPage(soup)
@@ -77,7 +84,7 @@ class Client:
             url = self.url + 'advsearch.php?stext=' + \
                 str(value) + options
             page = requests.get(url)
-            soup = BeautifulSoup(page.text, "html.parser")
+            soup = BeautifulSoup(page.content, "html.parser")
             movies_cell = soup.find_all("div", {"class": 'movie-card-1'})
             if movies_cell:
                 cell = movies_cell[0]
@@ -87,7 +94,7 @@ class Client:
 
     def _return_list_movies(self, page, method, top=10):
         movies = []
-        soup = BeautifulSoup(page.text, "html.parser")
+        soup = BeautifulSoup(page.content, "html.parser")
         if method == 'top':
             movies_list = soup.find("ul", {"id": 'top-movies'})
             movies_cell = movies_list.find_all(
@@ -114,21 +121,19 @@ class Client:
 
     def _recommend(self, service, trailer=False):
         movie = {}
-        if self.lang == 'es':
-            url = self.url + 'topcat.php?id=' + service
-            page = requests.get(url)
-            soup = BeautifulSoup(page.text, "html.parser")
-            movies_cell = soup.find_all("div", {"class": 'movie-card'})
-            cell = random.choice(movies_cell)
-            id = str(cell['data-movie-id'])
-            movie = self._get_movie_by_id(id, trailer)
+        url = self.url + 'topcat.php?id=' + service
+        page = requests.get(url)
+        soup = BeautifulSoup(page.content, "html.parser")
+        movies_cell = soup.find_all("div", {"class": 'movie-card'})
+        cell = random.choice(movies_cell)
+        id = str(cell['data-movie-id'])
+        movie = self._get_movie_by_id(id, trailer)
         return movie
 
     def _top_service(self, top, service):
         movies = []
-        if self.lang == 'es':
-            top = 40 if top > 40 else top
-            url = self.url + 'topcat.php?id=' + service
-            page = requests.get(url)
-            movies = self._return_list_movies(page, 'top_service', top)
+        top = 40 if top > 40 else top
+        url = self.url + 'topcat.php?id=' + service
+        page = requests.get(url)
+        movies = self._return_list_movies(page, 'top_service', top)
         return movies
