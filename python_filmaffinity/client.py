@@ -49,7 +49,7 @@ class Client:
         title += ' trailer'
         title = quote(title)
         page = requests.get(self.url_youtube + str(title))
-        soup = BeautifulSoup(page.text, "html.parser")
+        soup = BeautifulSoup(page.content, "html.parser")
         vid = soup.findAll(attrs={'class': 'yt-uix-tile-link'})[0]
         return 'https://www.youtube.com' + vid['href']
 
@@ -57,7 +57,7 @@ class Client:
     def _get_movie_by_id(self, id, trailer=False):
         movie = {}
         page = requests.get(self.url_film + str(id) + '.html')
-        soup = BeautifulSoup(page.text, "html.parser")
+        soup = BeautifulSoup(page.content, "html.parser")
         exist = soup.find_all("div", {"class": 'z-movie'})
         if exist:
             page = DetailPage(soup)
@@ -84,7 +84,7 @@ class Client:
             url = self.url + 'advsearch.php?stext=' + \
                 str(value) + options
             page = requests.get(url)
-            soup = BeautifulSoup(page.text, "html.parser")
+            soup = BeautifulSoup(page.content, "html.parser")
             movies_cell = soup.find_all("div", {"class": 'movie-card-1'})
             if movies_cell:
                 cell = movies_cell[0]
@@ -94,7 +94,7 @@ class Client:
 
     def _return_list_movies(self, page, method, top=10):
         movies = []
-        soup = BeautifulSoup(page.text, "html.parser")
+        soup = BeautifulSoup(page.content, "html.parser")
         if method == 'top':
             movies_list = soup.find("ul", {"id": 'top-movies'})
             movies_cell = movies_list.find_all(
@@ -123,7 +123,7 @@ class Client:
         movie = {}
         url = self.url + 'topcat.php?id=' + service
         page = requests.get(url)
-        soup = BeautifulSoup(page.text, "html.parser")
+        soup = BeautifulSoup(page.content, "html.parser")
         movies_cell = soup.find_all("div", {"class": 'movie-card'})
         cell = random.choice(movies_cell)
         id = str(cell['data-movie-id'])
