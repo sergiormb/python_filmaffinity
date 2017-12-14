@@ -1,7 +1,7 @@
 *******************
-Python Filmaffinity
+Python FilmAffinity
 *******************
-This is a simple python scraping for the Filmaffinity.
+This is a simple python scraping for the FilmAffinity.
 
 .. image:: https://travis-ci.org/sergiormb/python_filmaffinity.svg?branch=master
     :target: https://travis-ci.org/sergiormb/python_filmaffinity

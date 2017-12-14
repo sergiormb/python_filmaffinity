@@ -27,7 +27,7 @@ supported_languages = ['en', 'es', 'mx', 'ar', 'cl', 'co']
 
 
 class Client:
-    """Client to make requests to Filmaffinity."""
+    """Client to make requests to FilmAffinity."""
 
     base_url = 'https://www.filmaffinity.com/'
 

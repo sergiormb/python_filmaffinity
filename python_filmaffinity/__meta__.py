@@ -2,7 +2,7 @@
 """
 
 __title__ = 'python_filmaffinity'
-__summary__ = 'Python wrapper for Filmaffinity'
+__summary__ = 'Python wrapper for FilmAffinity'
 __url__ = 'https://github.com/sergiormb/python_filmaffinityy'
 
 __version__ = '0.0.6'

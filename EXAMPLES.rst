@@ -4,7 +4,7 @@ Examples
 .. code-block:: python
 
     import python_filmaffinity
-    service = python_filmaffinity.Filmaffinity()
+    service = python_filmaffinity.FilmAffinity()
     movie = service.get_movie(title='Celda 211')
     movie['title']
     Celda 211

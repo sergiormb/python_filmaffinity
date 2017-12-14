@@ -15,7 +15,7 @@ else:
     from cachetools import cached, hashkey
 
 
-class Filmaffinity(Client):
+class FilmAffinity(Client):
 
     def get_movie(self, trailer=False, **kwargs):
         """Return a dictionary with the data of the movie.

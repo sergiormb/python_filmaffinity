@@ -17,7 +17,7 @@ language
 .. code-block:: python
 
     import python_filmaffinity
-    service = python_filmaffinity.Filmaffinity(lang='en')
+    service = python_filmaffinity.FilmAffinity(lang='en')
 
 
 search
@@ -50,7 +50,7 @@ get_movie
 +-----------+----------+--------+-----------------------------------+
 | Parameter | Required |   Type | Description                       |
 +===========+==========+========+===================================+
-| id        |   False  | String | Filmaffinity id                   |
+| id        |   False  | String | FilmAffinity id                   |
 +-----------+----------+--------+-----------------------------------+
 | title     |   False  | String | Get movie by title                |
 +-----------+----------+--------+-----------------------------------+

@@ -12,7 +12,7 @@ from python_filmaffinity.config import FIELDS_PAGE_MOVIES, FIELDS_PAGE_DETAIL
 
 
 class TestApi(TestCase):
-    service = python_filmaffinity.Filmaffinity()
+    service = python_filmaffinity.FilmAffinity()
 
     def check_list(self, movies):
         self.assertNotEqual(0, len(movies))

@@ -1,7 +1,7 @@
 *******************
-Python Filmaffinity
+Python FilmAffinity
 *******************
-This is a simple python scraping for the Filmaffinity.
+This is a simple python scraping for the FilmAffinity.
 
 .. image:: https://travis-ci.org/sergiormb/python_filmaffinity.svg?branch=master
     :target: https://travis-ci.org/sergiormb/python_filmaffinity
@@ -50,7 +50,7 @@ Examples
 .. code-block:: python
 
     import python_filmaffinity
-    service = python_filmaffinity.Filmaffinity()
+    service = python_filmaffinity.FilmAffinity()
     movie = service.get_movie(title='Celda 211')
     movie['title']
     Celda 211
@@ -81,7 +81,7 @@ language
 .. code-block:: python
 
     import python_filmaffinity
-    service = python_filmaffinity.Filmaffinity(lang='en')
+    service = python_filmaffinity.FilmAffinity(lang='en')
 
 
 search
@@ -114,7 +114,7 @@ get_movie
 +-----------+----------+--------+-----------------------------------+
 | Parameter | Required |   Type | Description                       |
 +===========+==========+========+===================================+
-| id        |   False  | String | Filmaffinity id                   |
+| id        |   False  | String | FilmAffinity id                   |
 +-----------+----------+--------+-----------------------------------+
 | title     |   False  | String | Get movie by title                |
 +-----------+----------+--------+-----------------------------------+
