@@ -7,8 +7,6 @@ from .client import Client
 from .config import FIELDS_TYPE, cache
 
 from cachetools import __version__ as cachetools_version
-from .client import Client
-from .config import FIELDS_TYPE, cache
 
 if int(cachetools_version.split('.')[0]) >= 2:
     from cachetools import cached
