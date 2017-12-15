@@ -18,8 +18,8 @@ class Page(object):
     top searches (the most used in this module).
     Some of the results will return nothing, depending if the scrapped page
     contains the corresponding data. Some specific data are implemented
-    into his own subclass (Ex: get_awards and get_reviews are implemented into DetailPage
-        because those fields only are in detail page)
+    into his own subclass (Ex: get_awards and get_reviews are implemented
+    into DetailPage because those fields only are in detail page)
 
     Attributes:
         soup (TYPE): Page analyzed by BeautifulSoup.
@@ -64,7 +64,9 @@ class Page(object):
         cell = director_cell.find_all('span', {'class': 'nb'})
         # Sometimes the FilmAffinity classification
         # appears inside a directors tag, so we filter it
-        return [i.a['title'] for i in cell if i.a['title'] not in classifications]
+        return [
+            i.a['title'] for i in cell if i.a['title'] not in classifications
+        ]
 
     def get_actors(self):
         """Get the actors."""
@@ -75,7 +77,9 @@ class Page(object):
         cell = actors_cell.find_all("span", {'class': 'nb'})
         # Sometimes the  FilmAffinity classification
         # appears inside a actors tag, so we filter it
-        return [i.a['title'] for i in cell if i.a['title'] not in classifications]
+        return [
+            i.a['title'] for i in cell if i.a['title'] not in classifications
+        ]
 
     def get_poster(self):
         """Get poster."""
