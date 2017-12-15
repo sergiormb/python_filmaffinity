@@ -117,7 +117,9 @@ class DetailPage(Page):
         reviews = []
         for i in self.soup.find_all("div", {"class": 'pro-review'}):
             reviews.append(
-                {'author': i.find("div", {"itemprop": 'author'}).get_text(),
-                 'review': i.find("div", {"itemprop": 'reviewBody'}).get_text(),
+                {'author': i.find("div", {
+                    "itemprop": 'author'}).get_text(),
+                 'review': i.find("div", {
+                     "itemprop": 'reviewBody'}).get_text(),
                  'url': i.a['href'] if i.a else None})
         return reviews
