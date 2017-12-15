@@ -8,4 +8,3 @@ class SearchPage(Page):
     def get_id(self):
         """Get the id."""
         return str(self.soup['data-movie-id'])
-
