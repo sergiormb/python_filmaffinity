@@ -58,12 +58,17 @@ class Client:
             'id': fa_id or page.get_id(),
             'title': page.get_title(),
             'year': page.get_year(),
+            'duration': page.get_duration(),
             'rating': page.get_rating(),
             'votes': page.get_number_of_votes(),
             'description': page.get_description(),
             'directors': page.get_directors(),
             'actors': page.get_actors(),
             'poster': page.get_poster(),
+            'country': page.get_country(),
+            'genre': page.get_genre(),
+            'awards': page.get_awards(),
+            'reviews': page.get_reviews(),
         }
 
     @cached(cache, key=partial(hashkey, id))
@@ -108,7 +113,7 @@ class Client:
             movies_cell = soup.find_all("div", {"class": 'movie-card'})
             class_ = SearchPage
         if method == 'top_service':
-            movies_cell = soup.find_all("div", {"class": 'movie-card'})
+            movies_cell = soup.find_all("div", {"class": 'top-movie'})
             class_ = TopServicePage
         for cell in movies_cell[:top]:
             page = class_(cell)
