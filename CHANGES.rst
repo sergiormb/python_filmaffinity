@@ -1,7 +1,16 @@
 Changelog
 =========
 
-v0.0.6 (13-06-2017)
+v0.0.7 (15-012-2017)
+*******************
+
+- Fixes encoding for the analyzed results
+- Disabled limitations for all the supported languages
+- Change of name to the main class.
+- Adds initial language check and raise error if this is not in support
+- Adds basic exceptions
+
+v0.0.6 (12-012-2017)
 *******************
 
 - Add cachetools
