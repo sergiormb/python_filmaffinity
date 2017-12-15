@@ -63,6 +63,14 @@ class TestApi(TestCase):
         movies = self.service.top_netflix(top=10)
         self.check_list(movies)
 
+    def test_top_movistar(self):
+        movies = self.service.top_movistar(top=10)
+        self.check_list(movies)
+
+    def test_top_rakuten(self):
+        movies = self.service.top_rakuten(top=10)
+        self.check_list(movies)
+
     def test_top_hbo(self):
         movies = self.service.top_hbo(top=10)
         self.check_list(movies)
@@ -81,6 +89,14 @@ class TestApi(TestCase):
 
     def test_recommend_filmin(self):
         movie = self.service.recommend_filmin()
+        self.check_element(movie)
+
+    def test_recommend_movistar(self):
+        movie = self.service.recommend_movistar()
+        self.check_element(movie)
+
+    def test_recommend_rakuten(self):
+        movie = self.service.recommend_rakuten()
         self.check_element(movie)
 
     def test_trailer(self):

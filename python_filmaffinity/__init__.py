@@ -161,8 +161,7 @@ class FilmAffinity(Client):
         Returns:
             TYPE: Lis with movies data
         """
-        movies = self._top_service(top, 'new_netflix')
-        return movies
+        return self._top_service(top, 'new_netflix')
 
     @cached(cache, key=partial(hashkey, 'top_hbo'))
     def top_hbo(self, top=10):
@@ -171,17 +170,34 @@ class FilmAffinity(Client):
         Returns:
             TYPE: Lis with movies data
         """
-        movies = self._top_service(top, 'new_hbo_es')
-        return movies
+        return self._top_service(top, 'new_hbo_es')
 
+    @cached(cache, key=partial(hashkey, 'top_filmin'))
     def top_filmin(self, top=10):
         """Return a list with the top filmin movies.
 
         Returns:
             TYPE: Lis with movies data
         """
-        movies = self._top_service(top, 'new_filmin')
-        return movies
+        return self._top_service(top, 'new_filmin')
+
+    @cached(cache, key=partial(hashkey, 'top_movistar'))
+    def top_movistar(self, top=10):
+        """Return a list with the top movistar movies.
+
+        Returns:
+            TYPE: Lis with movies data
+        """
+        return self._top_service(top, 'new_movistar_f')
+
+    @cached(cache, key=partial(hashkey, 'top_rakuten'))
+    def top_rakuten(self, top=10):
+        """Return a list with the top rakuten movies.
+
+        Returns:
+            TYPE: Lis with movies data
+        """
+        return self._top_service(top, 'new_rakuten')
 
     def recommend_netflix(self, trailer=False):
         """Return a movie random in Netflix.
@@ -189,8 +205,7 @@ class FilmAffinity(Client):
         Returns:
             TYPE: Movie data
         """
-        movies = self._recommend('new_netflix', trailer)
-        return movies
+        return self._recommend('new_netflix', trailer)
 
     def recommend_hbo(self, trailer=False):
         """Return a movie random in HBO.
@@ -198,8 +213,23 @@ class FilmAffinity(Client):
         Returns:
             TYPE: Movie data
         """
-        movies = self._recommend('new_hbo_es', trailer)
-        return movies
+        return self._recommend('new_hbo_es', trailer)
+
+    def recommend_movistar(self, trailer=False):
+        """Return a movie random in Movistar.
+
+        Returns:
+            TYPE: Movie data
+        """
+        return self._recommend('new_movistar_f', trailer)
+
+    def recommend_rakuten(self, trailer=False):
+        """Return a movie random in Rakuten.
+
+        Returns:
+            TYPE: Movie data
+        """
+        return self._recommend('new_rakuten', trailer)
 
     def recommend_filmin(self, trailer=False):
         """Return a movie random in Filmin.
@@ -207,5 +237,4 @@ class FilmAffinity(Client):
         Returns:
             TYPE: Movie data
         """
-        movies = self._recommend('new_filmin', trailer)
-        return movies
+        return self._recommend('new_filmin', trailer)
