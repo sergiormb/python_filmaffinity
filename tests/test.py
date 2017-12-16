@@ -7,6 +7,7 @@ import random
 import python_filmaffinity
 from python_filmaffinity.config import FIELDS_PAGE_MOVIES, FIELDS_PAGE_DETAIL
 from python_filmaffinity.exceptions import FilmAffinityInvalidLanguage
+import python_filmaffinity.__meta__ as meta_test
 
 path = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, path + '/../')
@@ -123,3 +124,9 @@ class TestApi(TestCase):
         self.assertRaises(
             FilmAffinityInvalidLanguage,
             python_filmaffinity.FilmAffinity, lang="abc")
+
+    def test_meta_variables(self):
+        for v in meta_test.__dict__:
+            if v in ['__builtins__', '__package__', '__doc__']:
+                continue
+            self.assertIsNotNone(meta_test.__dict__[v])
