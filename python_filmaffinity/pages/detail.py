@@ -7,24 +7,27 @@ class DetailPage(Page):
 
     def get_title(self):
         """Get the title."""
+        name = None
         name_cell = self.soup.find("span", {"itemprop": 'name'})
-        if not name_cell:
-            return None
-        return name_cell.get_text()
+        if name_cell:
+            name = name_cell.get_text()
+        return name
 
     def get_year(self):
         """Get the year."""
+        year = None
         year_cell = self.soup.find("dd", {"itemprop": 'datePublished'})
-        if not year_cell:
-            return None
-        return year_cell.get_text()
+        if year_cell:
+            year = year_cell.get_text()
+        return year
 
     def get_description(self):
         """Get the description."""
+        description = None
         description_cell = self.soup.find("dd", {"itemprop": 'description'})
-        if not description_cell:
-            return None
-        return description_cell.get_text()
+        if description_cell:
+            description = description_cell.get_text()
+        return description
 
     def get_rating(self):
         """Get the rating."""
@@ -76,25 +79,27 @@ class DetailPage(Page):
 
     def get_duration(self):
         """Get Duration."""
+        duration = ''
         dc = self.soup.find("dd", {"itemprop": 'duration'})
-        if not dc:
-            return None
-        return dc.get_text()
+        if dc:
+            duration = dc.get_text()
+        return duration
 
     def get_country(self):
         """Get the country."""
+        country = ''
         dc = self.soup.find("span", {"id": 'country-img'})
-        if not dc:
-            return None
-        return dc.img['title']
+        if dc:
+            country = dc.img['title']
+        return country
 
     def get_genre(self):
         """Get the genre."""
+        genres = []
         dc = self.soup.find("span", {"itemprop": 'genre'})
-        if not dc:
-            return None
-        genres = [i.get_text() for i in dc.find_all("a")]
-        return ', '.join(genres) if genres else None
+        if dc:
+            [genres.append(i.get_text()) for i in dc.find_all("a")]
+        return genres
 
     def get_awards(self):
         """Get the awards.
