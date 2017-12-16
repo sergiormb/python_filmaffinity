@@ -103,6 +103,10 @@ class TestApi(TestCase):
         trailer = self.service._get_trailer('Batman')
         self.assertNotEqual(trailer, None)
 
+    def test_images(self):
+        movie = self.service.get_movie(id='668878', images=True)
+        self.assertNotEqual(movie['images'], [])
+
     def test_top_dvd(self):
         movies = self.service.top_dvd(top=10)
         self.check_list(movies)
