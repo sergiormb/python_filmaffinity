@@ -3,12 +3,12 @@ from unittest import TestCase
 import sys
 import os
 import random
-path = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, path + '/../')
 
 import python_filmaffinity
-
 from python_filmaffinity.config import FIELDS_PAGE_MOVIES, FIELDS_PAGE_DETAIL
+
+path = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, path + '/../')
 
 
 class TestApi(TestCase):
@@ -56,7 +56,8 @@ class TestApi(TestCase):
         self.check_list(movies)
 
     def test_search_years(self):
-        movies = self.service.search(title='Batman', from_year='2000', to_year='2011')
+        movies = self.service.search(
+            title='Batman', from_year='2000', to_year='2011')
         self.check_list(movies)
 
     def test_top_netflix(self):
