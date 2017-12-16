@@ -20,12 +20,18 @@ class TestApi(TestCase):
         self.assertNotEqual(0, len(movies))
         movie = random.choice(movies)
         for field in FIELDS_PAGE_MOVIES:
-            self.assertNotEqual(movie[field], None)
+            self.assertNotEqual(
+                movie[field], None,
+                msg='Error on getting movie list '
+                    ',field is: {}'.format(field))
         self.assertNotEqual(len(movie['directors']), 0)
 
     def check_element(self, movie):
         for field in FIELDS_PAGE_DETAIL:
-            self.assertNotEqual(movie[field], None)
+            self.assertNotEqual(
+                movie[field], None,
+                msg='Error on checking movie '
+                    'field: {}'.format(field))
 
     def test_search(self):
         movies = self.service.search(title='Batman')
@@ -133,4 +139,6 @@ class TestApi(TestCase):
         for v in meta_test.__dict__:
             if v in ['__builtins__', '__package__', '__doc__']:
                 continue
-            self.assertIsNotNone(meta_test.__dict__[v])
+            self.assertIsNotNone(
+                meta_test.__dict__[v],
+                msg='Error on getting meta value: {}'.format(v))
