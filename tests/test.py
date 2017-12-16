@@ -3,12 +3,12 @@ from unittest import TestCase
 import sys
 import os
 import random
-path = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, path + '/../')
 
 import python_filmaffinity
-
 from python_filmaffinity.config import FIELDS_PAGE_MOVIES, FIELDS_PAGE_DETAIL
+
+path = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, path + '/../')
 
 
 class TestApi(TestCase):
@@ -104,6 +104,10 @@ class TestApi(TestCase):
     def test_trailer(self):
         trailer = self.service._get_trailer('Batman')
         self.assertNotEqual(trailer, None)
+
+    def test_images(self):
+        movie = self.service.get_movie(id='668878', images=True)
+        self.assertNotEqual(movie['images'], [])
 
     def test_top_dvd(self):
         movies = self.service.top_dvd(top=10)
