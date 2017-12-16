@@ -25,10 +25,8 @@ class ImagesPage(Page):
                     th = re_th.group(1)
             except Exception as e:
                 pass
-            imgs.append(
-                {'image': i.a['href'],
-                 'thumbnail': th,
-            })
+            imgs.append({'image': i.a['href'],
+                         'thumbnail': th})
         return imgs
 
     def get_posters(self):
@@ -55,5 +53,3 @@ class ImagesPage(Page):
         """Get images of type shootings/making of."""
         imgs_cells = self.soup.find("div", {"id": 'type_imgs_13'})
         return self._get_list_of_images(imgs_cells)
-
-
