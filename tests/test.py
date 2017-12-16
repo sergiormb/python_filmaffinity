@@ -6,6 +6,7 @@ import random
 
 import python_filmaffinity
 from python_filmaffinity.config import FIELDS_PAGE_MOVIES, FIELDS_PAGE_DETAIL
+from python_filmaffinity.exceptions import FilmAffinityInvalidLanguage
 
 path = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, path + '/../')
@@ -119,5 +120,6 @@ class TestApi(TestCase):
         self.check_list(movies)
 
     def test_invalid_language(self):
-        self.assertRaises(python_filmaffinity.FilmAffinity(
-            lang="abc"), python_filmaffinity.exceptions.FilmAffinityInvalidLanguage)
+        self.assertRaises(
+            FilmAffinityInvalidLanguage,
+            python_filmaffinity.FilmAffinity, lang="abc")
