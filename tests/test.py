@@ -34,6 +34,9 @@ class TestApi(TestCase):
     def test_get_movie(self):
         movie = self.service.get_movie(id='197671', images=True)
         self.check_element(movie)
+        self.assertNotEqual(
+            movie['images'], [],
+            msg='Error on getting movie images')
 
     def test_top_filmaffinity(self):
         movies = self.service.top_filmaffinity()
@@ -106,10 +109,6 @@ class TestApi(TestCase):
     def test_trailer(self):
         trailer = self.service._get_trailer('Batman')
         self.assertNotEqual(trailer, None)
-
-    def test_images(self):
-        movie = self.service.get_movie(id='668878', images=True)
-        self.assertNotEqual(movie['images'], [])
 
     def test_top_dvd(self):
         movies = self.service.top_dvd(top=10)
