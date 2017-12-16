@@ -8,20 +8,23 @@ class DetailPage(Page):
     def get_title(self):
         """Get the title."""
         name_cell = self.soup.find("span", {"itemprop": 'name'})
-        name = name_cell.get_text()
-        return name
+        if not name_cell:
+            return None
+        return name_cell.get_text()
 
     def get_year(self):
         """Get the year."""
         year_cell = self.soup.find("dd", {"itemprop": 'datePublished'})
-        year = year_cell.get_text()
-        return year
+        if not year_cell:
+            return None
+        return year_cell.get_text()
 
     def get_description(self):
         """Get the description."""
         description_cell = self.soup.find("dd", {"itemprop": 'description'})
-        description = description_cell.get_text()
-        return description
+        if not description_cell:
+            return None
+        return description_cell.get_text()
 
     def get_rating(self):
         """Get the rating."""
