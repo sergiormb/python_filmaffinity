@@ -7,7 +7,7 @@ from functools import partial
 from bs4 import BeautifulSoup
 
 from .config import cache, FIELDS_MOVIE
-from .pages import DetailPage, SearchPage, TopPage, TopServicePage
+from .pages import DetailPage, SearchPage, TopPage, TopServicePage, ImagesPage
 from .exceptions import FilmAffinityInvalidLanguage
 
 from cachetools import __version__ as cachetools_version
@@ -43,6 +43,7 @@ class Client:
         self.lang = lang
         self.url = self.base_url + self.lang + '/'
         self.url_film = self.url + 'film'
+        self.url_images = self.url + 'filmimages.php?movie_id='
         self.url_youtube = 'https://www.youtube.com/results?search_query='
 
     def _get_trailer(self, title):
@@ -52,6 +53,27 @@ class Client:
         soup = BeautifulSoup(page.content, "html.parser")
         vid = soup.findAll(attrs={'class': 'yt-uix-tile-link'})[0]
         return 'https://www.youtube.com' + vid['href']
+
+    def _get_movie_images(self, fa_id):
+        url = self.url_images + str(fa_id)
+        r = requests.get(url)
+        soup = BeautifulSoup(r.content, "html.parser")
+        exist = soup.findAll("div", {"id": 'main-image-wrapper'})
+        if not exist:
+            return {
+                'posters': [],
+                'stills': [],
+                'promo': [],
+                'events': [],
+                'shootings': []}
+        page = ImagesPage(soup)
+        return {
+            'posters': page.get_posters(),
+            'stills': page.get_stills(),
+            'promo': page.get_promos(),
+            'events': page.get_events(),
+            'shootings': page.get_shootings(),
+        }
 
     def _get_movie_data(self, page, fa_id=None):
         return {
@@ -72,7 +94,7 @@ class Client:
         }
 
     @cached(cache, key=partial(hashkey, id))
-    def _get_movie_by_id(self, id, trailer=False):
+    def _get_movie_by_id(self, id, trailer=False, images=False):
         movie = {}
         page = requests.get(self.url_film + str(id) + '.html')
         soup = BeautifulSoup(page.content, "html.parser")
@@ -82,10 +104,11 @@ class Client:
             movie = self._get_movie_data(page, fa_id=id)
             if trailer:
                 movie.update({'trailer': self._get_trailer(movie['title'])})
-
+        if images and movie.get('id', False):
+            movie.update({'images': self._get_movie_images(movie['id'])})
         return movie
 
-    def _get_movie_by_args(self, key, value, trailer=False):
+    def _get_movie_by_args(self, key, value, trailer=False, images=False):
         movie = {}
         if key in FIELDS_MOVIE:
             options = '&stype[]=%s' % key
@@ -97,7 +120,7 @@ class Client:
             if movies_cell:
                 cell = movies_cell[0]
                 id = str(cell['data-movie-id'])
-                movie = self._get_movie_by_id(id, 'search')
+                movie = self._get_movie_by_id(id, 'search', images)
         return movie
 
     def _return_list_movies(self, page, method, top=10):
@@ -121,7 +144,7 @@ class Client:
             movies.append(movie)
         return movies
 
-    def _recommend(self, service, trailer=False):
+    def _recommend(self, service, trailer=False, images=False):
         movie = {}
         url = self.url + 'topcat.php?id=' + service
         page = requests.get(url)
@@ -129,7 +152,7 @@ class Client:
         movies_cell = soup.find_all("div", {"class": 'movie-card'})
         cell = random.choice(movies_cell)
         id = str(cell['data-movie-id'])
-        movie = self._get_movie_by_id(id, trailer)
+        movie = self._get_movie_by_id(id, trailer, images)
         return movie
 
     def _top_service(self, top, service):
