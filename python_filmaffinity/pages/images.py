@@ -17,16 +17,16 @@ class ImagesPage(Page):
         all_imgs = imgs_soup.find_all("div", {"class": 'colorbox-image'})
         imgs = []
         for i in all_imgs:
-            th = None
-            try:
-                re_th = pattern_thumbnail.search(
-                    i.a.div['style'])
-                if re_th:
-                    th = re_th.group(1)
-            except Exception as e:
-                pass
-            imgs.append({'image': i.a['href'],
-                         'thumbnail': th})
+            if hasattr(i, 'a'):
+                im = i.a['href']
+                th = None
+                if hasattr(i.a, 'div'):
+                    re_th = pattern_thumbnail.search(
+                        i.a.div['style'])
+                    if re_th:
+                        th = re_th.group(1)
+                imgs.append({'image': im,
+                             'thumbnail': th})
         return imgs
 
     def get_posters(self):
