@@ -30,7 +30,7 @@ class TestApi(TestCase):
         self.check_list(movies)
 
     def test_get_movie(self):
-        movie = self.service.get_movie(id='197671')
+        movie = self.service.get_movie(id='197671', images=True)
         self.check_element(movie)
 
     def test_top_filmaffinity(self):
@@ -52,11 +52,13 @@ class TestApi(TestCase):
         self.check_list(movies)
 
     def test_top_filmaffinity_years(self):
-        movies = self.service.top_filmaffinity(from_year='2010', to_year='2011')
+        movies = self.service.top_filmaffinity(
+            from_year='2010', to_year='2011')
         self.check_list(movies)
 
     def test_search_years(self):
-        movies = self.service.search(title='Batman', from_year='2000', to_year='2011')
+        movies = self.service.search(
+            title='Batman', from_year='2000', to_year='2011')
         self.check_list(movies)
 
     def test_top_netflix(self):
@@ -111,3 +113,7 @@ class TestApi(TestCase):
         movies = self.service.top_dvd(top=80)
         self.assertEqual(len(movies), 40)
         self.check_list(movies)
+
+    def test_invalid_language(self):
+        self.assertRaises(python_filmaffinity.FilmAffinity(
+            lang="abc"), python_filmaffinity.exceptions.FilmAffinityInvalidLanguage)

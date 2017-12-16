@@ -56,6 +56,8 @@ get_movie
 +-----------+----------+--------+-----------------------------------+
 | trailer   |   False  | Boolean| Return movie with trailer         |
 +-----------+----------+--------+-----------------------------------+
+| images    |   False  | Boolean| Return movie with images          |
++-----------+----------+--------+-----------------------------------+
 
 - Example
 
@@ -130,6 +132,8 @@ recommend HBO, Netflix, Filmin, Movistar, Rakuten
 | Parameter | Required |   Type | Description                       |
 +===========+==========+========+===================================+
 | trailer   |   False  | Boolean| Return movie with trailer         |
++-----------+----------+--------+-----------------------------------+
+| images    |   False  | Boolean| Return movie with images          |
 +-----------+----------+--------+-----------------------------------+
 
 - Example
