@@ -1,5 +1,25 @@
+import re
+
+pattern_title_year = re.compile(
+    '(.+[^0-9|^(|^\[])[([|\[| |.|_]*(19\d\d|20\d\d)[)|\]]?', re.IGNORECASE)
+
+classifications = [
+    'Documentary',
+    'Animation',
+    'Tv Series',
+    'TV Miniseries',
+]
+
+
 class Page(object):
-    """This is a simple python scraping.
+    """This is a simple python scraping object that represents
+    all possible data that we can scrap from a FilmAffinity detail page.
+    Most of the scraping for this class is based on tags from the
+    top searches (the most used in this module).
+    Some of the results will return nothing, depending if the scrapped page
+    contains the corresponding data. Some specific data are implemented
+    into his own subclass (Ex: get_awards and get_reviews are implemented
+    into DetailPage because those fields only are in detail page)
 
     Attributes:
         soup (TYPE): Page analyzed by BeautifulSoup.
@@ -12,6 +32,13 @@ class Page(object):
         """
         self.soup = soup
 
+    def get_id(self):
+        """Get the id."""
+        cell = self.soup.find('div', {'class': 'movie-card'})
+        if not cell:
+            return None
+        return cell.get('data-movie-id', None)
+
     def get_title(self):
         """Get title."""
         title = self.soup.find('div', {'class': 'mc-title'})
@@ -19,22 +46,40 @@ class Page(object):
 
     def get_rating(self):
         """Get rating."""
-        rating = self.soup.find("div", {"class": 'avg-rating'})
-        if rating:
+        cell = self.soup.find(
+            "div", {"class": ['avg-rating', 'avgrat-box']})
+        if cell:
             try:
-                rating = float(rating.get_text())
+                cell = float(cell.get_text())
             except ValueError:
-                rating = rating.get_text()
-        return rating
+                cell = cell.get_text()
+        return cell
 
     def get_directors(self):
         """Get directors."""
-        directors = []
-        director_cell = self.soup.find('div', {'class': 'credits'})
-        if director_cell:
-            director_cell = director_cell.find('span', {'class': 'nb'})
-            directors.append(director_cell.get_text())
-        return directors if directors else None
+        director_cell = self.soup.find(
+            'div', {'class': ['director', 'mc-director']})
+        if not director_cell:
+            return []
+        cell = director_cell.find_all('span', {'class': 'nb'})
+        # Sometimes the FilmAffinity classification
+        # appears inside a directors tag, so we filter it
+        return [
+            i.a['title'] for i in cell if i.a['title'] not in classifications
+        ]
+
+    def get_actors(self):
+        """Get the actors."""
+        actors_cell = self.soup.find(
+            'div', {'class': ['cast', 'mc-cast']})
+        if not actors_cell:
+            return []
+        cell = actors_cell.find_all("span", {'class': 'nb'})
+        # Sometimes the  FilmAffinity classification
+        # appears inside a actors tag, so we filter it
+        return [
+            i.a['title'] for i in cell if i.a['title'] not in classifications
+        ]
 
     def get_poster(self):
         """Get poster."""
@@ -44,3 +89,65 @@ class Page(object):
             poster_img = poster.find('img')
             poster_img = poster_img['src']
         return poster_img
+
+    def get_duration(self):
+        """Get Duration."""
+        cell = self.soup.find('div', {'class': 'duration'})
+        if not cell:
+            return None
+        return cell.get_text().strip()
+
+    def get_year(self):
+        """Get the year."""
+        cell = self.soup.find('div', {'class': 'mc-data'})
+        if not cell:
+            return self._get_year_from_title()
+        return cell.find_all('div')[0].get_text()
+
+    def _get_year_from_title(self):
+        """Get the year from title."""
+        # Sometimes we cannot find the year inside specific tag,
+        # so...we try to guess from the title
+        t = self.get_title()
+        re_match = pattern_title_year.match(t if t else '')
+        if not re_match:
+            return None
+        return re_match.group(2)
+
+    def get_country(self):
+        """Get the country."""
+        cell = self.soup.find('div', {'class': ['mc-data', 'mc-title']})
+        if not cell:
+            return None
+        return cell.img['title']
+
+    def get_genre(self):
+        """Get the genre."""
+        cell = self.soup.find('div', {'class': 'mc-data'})
+        if not cell:
+            return None
+        return cell.find('a', {'class': 'genre'}).get_text()
+
+    def get_description(self):
+        """Get the description."""
+        cell = self.soup.find('div', {'class': 'mc-data'})
+        if not cell:
+            return None
+        return cell.find('a', {'class': 'synop-text'}).get_text()
+
+    def get_number_of_votes(self):
+        """Get the number of votes."""
+        cell = self.soup.find("div", {"class": ['rat-count', 'ratcount-box']})
+        if not cell:
+            return None
+        return cell.get_text().strip()
+
+    def get_awards(self):
+        """Get the awards."""
+        # Implemented into subclass: see DetailPage for more details
+        return []
+
+    def get_reviews(self):
+        """Get the reviews."""
+        # Implemented into subclass: see DetailPage for more details
+        return []

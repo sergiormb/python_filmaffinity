@@ -17,12 +17,14 @@ else:
 
 class FilmAffinity(Client):
 
-    def get_movie(self, trailer=False, **kwargs):
+    def get_movie(self, trailer=False, images=False, **kwargs):
         """Return a dictionary with the data of the movie.
 
         Args:
             title: Search by title
             id: Search by id
+            trailer: Enable/Disable search a trailer
+            images: Enable/Disable search for images
         Returns:
             TYPE: Dictionary with movie data
         """
@@ -30,9 +32,11 @@ class FilmAffinity(Client):
         if kwargs is not None:
             for key, value in iter(kwargs.items()):
                 if key == 'id':
-                    movie = self._get_movie_by_id(value, trailer)
+                    movie = self._get_movie_by_id(
+                        value, trailer, images)
                 else:
-                    movie = self._get_movie_by_args(key, value, trailer)
+                    movie = self._get_movie_by_args(
+                        key, value, trailer, images)
         return movie
 
     def search(self, top=10, **kwargs):
@@ -199,42 +203,42 @@ class FilmAffinity(Client):
         """
         return self._top_service(top, 'new_rakuten')
 
-    def recommend_netflix(self, trailer=False):
+    def recommend_netflix(self, trailer=False, images=False):
         """Return a movie random in Netflix.
 
         Returns:
             TYPE: Movie data
         """
-        return self._recommend('new_netflix', trailer)
+        return self._recommend('new_netflix', trailer, images)
 
-    def recommend_hbo(self, trailer=False):
+    def recommend_hbo(self, trailer=False, images=False):
         """Return a movie random in HBO.
 
         Returns:
             TYPE: Movie data
         """
-        return self._recommend('new_hbo_es', trailer)
+        return self._recommend('new_hbo_es', trailer, images)
 
-    def recommend_movistar(self, trailer=False):
+    def recommend_movistar(self, trailer=False, images=False):
         """Return a movie random in Movistar.
 
         Returns:
             TYPE: Movie data
         """
-        return self._recommend('new_movistar_f', trailer)
+        return self._recommend('new_movistar_f', trailer, images)
 
-    def recommend_rakuten(self, trailer=False):
+    def recommend_rakuten(self, trailer=False, images=False):
         """Return a movie random in Rakuten.
 
         Returns:
             TYPE: Movie data
         """
-        return self._recommend('new_rakuten', trailer)
+        return self._recommend('new_rakuten', trailer, images)
 
-    def recommend_filmin(self, trailer=False):
+    def recommend_filmin(self, trailer=False, images=False):
         """Return a movie random in Filmin.
 
         Returns:
             TYPE: Movie data
         """
-        return self._recommend('new_filmin', trailer)
+        return self._recommend('new_filmin', trailer, images)
