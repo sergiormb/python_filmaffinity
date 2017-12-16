@@ -30,9 +30,9 @@ From Source
 
 ::
 
-    git clone git@github.com:sergiormb/python_filmaffinity.git`
-    cd python_filmaffinity`
-    python setup.py install`
+    git clone git@github.com:sergiormb/python_filmaffinity.git
+    cd python_filmaffinity
+    python setup.py install
 
 
 Requirements
@@ -40,8 +40,8 @@ Requirements
 
 ::
 
-    requests >= 2.0.1`
-    bs4 >= 0.0.1`
+    requests >= 2.0.1
+    bs4 >= 0.0.1
 
 
 Examples
@@ -166,8 +166,8 @@ top_premieres
     movies = service.top_premieres()
 
 
-top_netflix, top_hbo, top_filmin, top_tv_series
-***********************************************
+top_netflix, top_hbo, top_filmin, top_movistar, top_rakuten, top_tv_series
+**************************************************************************
 
 +-----------+----------+--------+-----------------------------------+
 | Parameter | Required |   Type | Description                       |
@@ -182,11 +182,13 @@ top_netflix, top_hbo, top_filmin, top_tv_series
     movies = service.top_netflix()
     movies = service.top_hbo(top=5)
     movies = service.top_filmin()
+    movies = service.top_movistar()
+    movies = service.top_rakuten()
     movies = service.top_tv_series()
 
 
-recommend HBO, Netflix, Filmin
-******************************
+recommend HBO, Netflix, Filmin, Movistar, Rakuten
+*************************************************
 
 +-----------+----------+--------+-----------------------------------+
 | Parameter | Required |   Type | Description                       |
@@ -201,12 +203,23 @@ recommend HBO, Netflix, Filmin
     movies = service.recommend_netflix()
     movies = service.recommend_hbo()
     movies = service.recommend_filmin()
+    movies = service.recommend_movistar()
+    movies = service.recommend_rakuten()
 
 
 Changelog
 =========
 
-v0.0.6 (13-06-2017)
+v0.0.7 (15-012-2017)
+*******************
+
+- Fixes encoding for the analyzed results
+- Disabled limitations for all the supported languages
+- Change of name to the main class.
+- Adds initial language check and raise error if this is not in support
+- Adds basic exceptions
+
+v0.0.6 (12-06-2017)
 *******************
 
 - Add cachetools

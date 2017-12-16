@@ -102,8 +102,8 @@ top_premieres
     movies = service.top_premieres()
 
 
-top_netflix, top_hbo, top_filmin, top_tv_series
-***********************************************
+top_netflix, top_hbo, top_filmin, top_movistar, top_rakuten, top_tv_series
+**************************************************************************
 
 +-----------+----------+--------+-----------------------------------+
 | Parameter | Required |   Type | Description                       |
@@ -118,11 +118,13 @@ top_netflix, top_hbo, top_filmin, top_tv_series
     movies = service.top_netflix()
     movies = service.top_hbo(top=5)
     movies = service.top_filmin()
+    movies = service.top_movistar()
+    movies = service.top_rakuten()
     movies = service.top_tv_series()
 
 
-recommend HBO, Netflix, Filmin
-******************************
+recommend HBO, Netflix, Filmin, Movistar, Rakuten
+*************************************************
 
 +-----------+----------+--------+-----------------------------------+
 | Parameter | Required |   Type | Description                       |
@@ -137,3 +139,5 @@ recommend HBO, Netflix, Filmin
     movies = service.recommend_netflix()
     movies = service.recommend_hbo()
     movies = service.recommend_filmin()
+    movies = service.recommend_movistar()
+    movies = service.recommend_rakuten()
