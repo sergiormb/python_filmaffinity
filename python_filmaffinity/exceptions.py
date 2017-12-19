@@ -17,3 +17,12 @@ class FilmAffinityInvalidLanguage(FilmAffinityException):
         return repr('Invalid Language selected: {}    '
                     '[Available languages are: {}]'.format(
                         self.value, ', '.join(self.supported)))
+
+
+class FilmAffinityConnectionError(FilmAffinityException):
+    """Invalid connection tp FilmAffinity."""
+    def __init__(self, value):
+        self.value = value
+
+    def __str__(self):
+        return repr('Error connecting to FilmAffinity: {}'.format(self.value))
