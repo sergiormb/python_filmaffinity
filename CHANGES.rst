@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v0.0.9 (28-12-2017)
+*******************
+
+- Replaces cachetools for requests-cache
+
 v0.0.8 (26-12-2017)
 *******************
 
