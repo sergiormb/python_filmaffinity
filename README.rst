@@ -214,6 +214,12 @@ recommend HBO, Netflix, Filmin, Movistar, Rakuten
 Changelog
 =========
 
+v0.0.8 (26-012-2017)
+*******************
+
+- Add images
+- Fixed errors
+
 v0.0.7 (15-012-2017)
 *******************
 
