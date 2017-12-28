@@ -1,18 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import requests
-from functools import partial
-
 from .client import Client
-from .config import FIELDS_TYPE, cache
-
-from cachetools import __version__ as cachetools_version
-
-if int(cachetools_version.split('.')[0]) >= 2:
-    from cachetools import cached
-    from cachetools.keys import hashkey
-else:
-    from cachetools import cached, hashkey
+from .config import FIELDS_TYPE
 
 
 class FilmAffinity(Client):
@@ -63,11 +52,10 @@ class FilmAffinity(Client):
                 if key == 'to_year':
                     options += 'toyear=%s&' % value
             url = self.url + 'advsearch.php?' + options
-            page = requests.get(url)
+            page = self._load_url(url)
             movies = self._return_list_movies(page, 'search', top)
         return movies
 
-    @cached(cache, key=partial(hashkey, 'top_filmaffinity'))
     def top_filmaffinity(self, top=10, **kwargs):
         """Return a list with the top filmaffinity movies.
 
@@ -91,11 +79,10 @@ class FilmAffinity(Client):
             url = self.url + 'topgen.php?' + options
         else:
             url = self.url + 'topgen.php'
-        page = requests.get(url)
+        page = self._load_url(url)
         movies = self._return_list_movies(page, 'top', top)
         return movies
 
-    @cached(cache, key=partial(hashkey, 'top_tv_series'))
     def top_tv_series(self, top=10, **kwargs):
         """Return a list with the top tv series.
 
@@ -119,11 +106,10 @@ class FilmAffinity(Client):
             url = self.url + 'topgen.php?genre=TV_SE&' + options
         else:
             url = self.url + 'topgen.php?genre=TV_SE'
-        page = requests.get(url)
+        page = self._load_url(url)
         movies = self._return_list_movies(page, 'top', top)
         return movies
 
-    @cached(cache, key=partial(hashkey, 'top_dvd'))
     def top_dvd(self, top=10):
         """Return a list with the top new dvds.
 
@@ -136,11 +122,10 @@ class FilmAffinity(Client):
             url = self.url + 'topcat_new_sa_es.html'
         else:
             url = self.url + 'topcat_DVD_VID_US.html'
-        page = requests.get(url)
+        page = self._load_url(url)
         movies = self._return_list_movies(page, 'top_service', top)
         return movies
 
-    @cached(cache, key=partial(hashkey, 'top_premieres'))
     def top_premieres(self, top=10):
         """Return a list with the top filmaffinity movies.
 
@@ -154,11 +139,10 @@ class FilmAffinity(Client):
         top = 40 if top > 40 else top
         movies = []
         url = self.url + 'topcat_new_th_es.html'
-        page = requests.get(url)
+        page = self._load_url(url)
         movies = self._return_list_movies(page, 'top_service', top)
         return movies
 
-    @cached(cache, key=partial(hashkey, 'top_netflix'))
     def top_netflix(self, top=10):
         """Return a list with the top netflix movies.
 
@@ -167,7 +151,6 @@ class FilmAffinity(Client):
         """
         return self._top_service(top, 'new_netflix')
 
-    @cached(cache, key=partial(hashkey, 'top_hbo'))
     def top_hbo(self, top=10):
         """Return a list with the top hbo movies.
 
@@ -176,7 +159,6 @@ class FilmAffinity(Client):
         """
         return self._top_service(top, 'new_hbo_es')
 
-    @cached(cache, key=partial(hashkey, 'top_filmin'))
     def top_filmin(self, top=10):
         """Return a list with the top filmin movies.
 
@@ -185,7 +167,6 @@ class FilmAffinity(Client):
         """
         return self._top_service(top, 'new_filmin')
 
-    @cached(cache, key=partial(hashkey, 'top_movistar'))
     def top_movistar(self, top=10):
         """Return a list with the top movistar movies.
 
@@ -194,7 +175,6 @@ class FilmAffinity(Client):
         """
         return self._top_service(top, 'new_movistar_f')
 
-    @cached(cache, key=partial(hashkey, 'top_rakuten'))
     def top_rakuten(self, top=10):
         """Return a list with the top rakuten movies.
 

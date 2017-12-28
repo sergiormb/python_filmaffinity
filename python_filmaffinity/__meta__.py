@@ -9,8 +9,8 @@ __version__ = '0.0.7'
 
 __install_requires__ = [
     'requests>=2.0.1',
-    'bs4>=0.0.1',
-    'cachetools>=1.1.5'
+    'requests-cache>=0.4.0',
+    'bs4>=0.0.1'
 ]
 
 __author__ = 'sergiormb'

@@ -6,7 +6,11 @@ import random
 
 import python_filmaffinity
 from python_filmaffinity.config import FIELDS_PAGE_MOVIES, FIELDS_PAGE_DETAIL
-from python_filmaffinity.exceptions import FilmAffinityInvalidLanguage
+from python_filmaffinity.exceptions import (
+    FilmAffinityInvalidLanguage,
+    FilmAffinityInvalidBackend,
+    FilmAffinityConnectionError
+)
 import python_filmaffinity.__meta__ as meta_test
 
 path = os.path.dirname(os.path.abspath(__file__))
@@ -134,6 +138,18 @@ class TestApi(TestCase):
         self.assertRaises(
             FilmAffinityInvalidLanguage,
             python_filmaffinity.FilmAffinity, lang="abc")
+
+    def test_invalid_backend(self):
+        self.assertRaises(
+            FilmAffinityInvalidBackend,
+            python_filmaffinity.FilmAffinity, cache_backend='mysqlite')
+
+    def test_invalid_connection(self):
+        self.assertRaises(
+            FilmAffinityConnectionError,
+            self.service._load_url, "http://notworking.tz",
+            headers={'User-Agent': 'Mozilla/5.0'}, verify=True,
+            timeout=1, force_server_response=True)
 
     def test_meta_variables(self):
         for v in meta_test.__dict__:

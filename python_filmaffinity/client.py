@@ -2,36 +2,60 @@
 # -*- coding: utf-8 -*-
 
 import requests
+import requests_cache
 import random
-from functools import partial
+
 from bs4 import BeautifulSoup
+from inspect import getsourcefile
+from os.path import join, dirname, abspath
 
-from .config import cache, FIELDS_MOVIE
+from .config import FIELDS_MOVIE
 from .pages import DetailPage, SearchPage, TopPage, TopServicePage, ImagesPage
-from .exceptions import FilmAffinityInvalidLanguage
-
-from cachetools import __version__ as cachetools_version
-if int(cachetools_version.split('.')[0]) >= 2:
-    from cachetools import cached
-    from cachetools.keys import hashkey
-else:
-    from cachetools import cached, hashkey
+from .exceptions import (
+    FilmAffinityInvalidLanguage,
+    FilmAffinityInvalidBackend,
+    FilmAffinityConnectionError)
 
 try:
     from urllib import quote  # Python 2.X
 except ImportError:
     from urllib.parse import quote  # Python 3+
 
-
+current_folder = dirname(abspath(getsourcefile(lambda: 0)))
 supported_languages = ['en', 'es', 'mx', 'ar', 'cl', 'co']
 
 
 class Client:
-    """Client to make requests to FilmAffinity."""
+    """Client to make requests to FilmAffinity.
+        Args:
+            lang: Language, one of: ('en', 'es', 'mx', 'ar', 'cl', 'co')
+            cache_path: Path to FilmAffinity Database (If not set, the
+                database will be stored inside python_filmaffinity path)
+            cache_backend: One of (sqlite, mongodb, memory, redis). Set to
+                memory or None if you don't wont persistent cache
+                (defaults to sqlite).
+                Note for backends (from requests-cache docs):
+                    'sqlite' - sqlite database
+                    'memory' - not persistent,
+                        stores all data in Python dict in memory
+                    'mongodb' - (experimental) MongoDB database
+                        (pymongo < 3.0 required)
+                    'redis' - stores all data on a redis data store
+                        (redis required)
+            cache_expires: Time in seconds to force new requests from the
+                server (defaults to 86400, 24 hours)
+            cache_remove_expired: Force to remove expired responses after any
+                requests call. This will ensure that if any call to FilmAffinity
+                fails and we already made that call we will get a response at a
+                cost of a bigger database file (defaults to True)
+
+    """
 
     base_url = 'https://www.filmaffinity.com/'
 
-    def __init__(self, lang='es'):
+    def __init__(self, lang='es', cache_path=None,
+                 cache_backend='sqlite', cache_expires=86400,
+                 cache_remove_expired=True):
         """Init the search service.
 
         Args:
@@ -40,23 +64,84 @@ class Client:
         if lang not in supported_languages:
             raise FilmAffinityInvalidLanguage(
                 lang, supported_languages)
+        if cache_backend not in ['sqlite', 'memory', 'mongodb', 'redis', None]:
+            raise FilmAffinityInvalidBackend(
+                cache_backend)
         self.lang = lang
+
         self.url = self.base_url + self.lang + '/'
         self.url_film = self.url + 'film'
         self.url_images = self.url + 'filmimages.php?movie_id='
         self.url_youtube = 'https://www.youtube.com/results?search_query='
 
+        # initialize requests-cache
+        self.cache_expires = cache_expires
+        self.cache_backend = cache_backend if cache_backend else 'memory'
+        self.cache_path = self._get_cache_file(cache_path)
+        self.cache_remove_expired = cache_remove_expired
+        self.session = None
+        self.session_headers = {
+            'User-Agent':
+                '"Mozilla/5.0 (X11; Linux x86_64; rv:36.0)'
+                ' Gecko/20100101 Firefox/36.0"'}
+
+    def _get_cache_file(self, cache_path=None):
+        """Returns the cache file used by requests-cache
+        """
+        c = None
+        if self.cache_backend in ['memory']:
+            p = 'cache'
+        elif cache_path:
+            c = join(cache_path, "cache-film-affinity")
+        else:
+            c = join(current_folder, "cache-film-affinity")
+        return c
+
+    def _get_requests_session(self):
+        """Initialize requests Session"""
+        self.session = requests_cache.CachedSession(
+            expire_after=self.cache_expires,
+            backend=self.cache_backend,
+            cache_name=self.cache_path,
+            include_get_headers=True,
+            old_data_on_error=True
+            )
+        if self.cache_remove_expired:
+            self.session.remove_expired_responses()
+
+    def _load_url(self, url, headers=None, verify=None,
+                  timeout=3, force_server_response=False):
+        """Return response from The FilmAffinity"""
+        kwargs = {'headers': self.session_headers}
+        if headers:
+            kwargs['headers'] = headers
+        if verify:
+            kwargs['verify'] = verify
+        if timeout:
+            kwargs['timeout'] = timeout
+        if not self.session:
+            self._get_requests_session()
+        try:
+            if not force_server_response:
+                response = self.session.get(url, **kwargs)
+            else:
+                with self.session.cache_disabled():
+                    response = self.session.get(url, **kwargs)
+        except requests.exceptions.ConnectionError as er:
+            raise FilmAffinityConnectionError(er)
+        return response
+
     def _get_trailer(self, title):
         title += ' trailer'
         title = quote(title)
-        page = requests.get(self.url_youtube + str(title))
+        page = self._load_url(self.url_youtube + str(title))
         soup = BeautifulSoup(page.content, "html.parser")
         vid = soup.findAll(attrs={'class': 'yt-uix-tile-link'})[0]
         return 'https://www.youtube.com' + vid['href']
 
     def _get_movie_images(self, fa_id):
         url = self.url_images + str(fa_id)
-        r = requests.get(url)
+        r = self._load_url(url)
         soup = BeautifulSoup(r.content, "html.parser")
         exist = soup.findAll("div", {"id": 'main-image-wrapper'})
         if not exist:
@@ -93,10 +178,9 @@ class Client:
             'reviews': page.get_reviews(),
         }
 
-    @cached(cache, key=partial(hashkey, id))
     def _get_movie_by_id(self, id, trailer=False, images=False):
         movie = {}
-        page = requests.get(self.url_film + str(id) + '.html')
+        page = self._load_url(self.url_film + str(id) + '.html')
         soup = BeautifulSoup(page.content, "html.parser")
         exist = soup.find_all("div", {"class": 'z-movie'})
         if exist:
@@ -114,7 +198,7 @@ class Client:
             options = '&stype[]=%s' % key
             url = self.url + 'advsearch.php?stext=' + \
                 str(value) + options
-            page = requests.get(url)
+            page = self._load_url(url)
             soup = BeautifulSoup(page.content, "html.parser")
             movies_cell = soup.find_all("div", {"class": 'movie-card-1'})
             if movies_cell:
@@ -147,7 +231,7 @@ class Client:
     def _recommend(self, service, trailer=False, images=False):
         movie = {}
         url = self.url + 'topcat.php?id=' + service
-        page = requests.get(url)
+        page = self._load_url(url)
         soup = BeautifulSoup(page.content, "html.parser")
         movies_cell = soup.find_all("div", {"class": 'movie-card'})
         cell = random.choice(movies_cell)
@@ -159,6 +243,6 @@ class Client:
         movies = []
         top = 40 if top > 40 else top
         url = self.url + 'topcat.php?id=' + service
-        page = requests.get(url)
+        page = self._load_url(url)
         movies = self._return_list_movies(page, 'top_service', top)
         return movies
