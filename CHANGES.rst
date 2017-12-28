@@ -1,13 +1,13 @@
 Changelog
 =========
 
-v0.0.8 (26-012-2017)
+v0.0.8 (26-12-2017)
 *******************
 
 - Add images
 - Fixed errors
 
-v0.0.7 (15-012-2017)
+v0.0.7 (15-12-2017)
 *******************
 
 - Fixes encoding for the analyzed results
@@ -16,7 +16,7 @@ v0.0.7 (15-012-2017)
 - Adds initial language check and raise error if this is not in support
 - Adds basic exceptions
 
-v0.0.6 (12-012-2017)
+v0.0.6 (12-12-2017)
 *******************
 
 - Add cachetools
