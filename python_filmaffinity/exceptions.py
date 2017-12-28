@@ -25,7 +25,8 @@ class FilmAffinityInvalidBackend(FilmAffinityException):
         self.value = value
 
     def __str__(self):
-        return repr('Invalid Backend for requests-cache: {}'.format(self.value))
+        return repr('Invalid Backend for requests-cache: {}'.format(
+            self.value))
 
 
 class FilmAffinityConnectionError(FilmAffinityException):

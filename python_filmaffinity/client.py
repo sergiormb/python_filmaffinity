@@ -45,9 +45,9 @@ class Client:
             cache_expires: Time in seconds to force new requests from the
                 server (defaults to 86400, 24 hours)
             cache_remove_expired: Force to remove expired responses after any
-                requests call. This will ensure that if any call to FilmAffinity
-                fails and we already made that call we will get a response at a
-                cost of a bigger database file (defaults to True)
+                requests call. This will ensure that if any call to
+                FilmAffinity fails and we already made that call we will get a
+                response at a cost of a bigger database file (defaults to True)
 
     """
 
