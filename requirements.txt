@@ -2,11 +2,9 @@ setuptools==28.8.0
 aarpy==0.1
 appdirs==1.4.3
 astroid==1.5.2
-backports.functools-lru-cache==1.4
 backports.shutil-get-terminal-size==1.0.0
 beautifulsoup4==4.6.0
 bs4==0.0.1
-cachetools==1.1.5
 configparser==3.5.0
 coveralls==1.1
 decorator==4.0.11
@@ -28,6 +26,7 @@ pylint==1.7.1
 pyparsing==2.2.0
 pytest==3.1.0
 requests==2.0.1
+requests-cache==0.4.13
 scandir==1.5
 simplegeneric==0.8.1
 singledispatch==3.4.0.3

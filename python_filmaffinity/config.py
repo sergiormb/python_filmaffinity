@@ -1,8 +1,6 @@
 """Config."""
 # -*- coding: utf-8 -*-
-from cachetools import LRUCache
 
-cache = LRUCache(maxsize=100)
 FIELDS_MOVIE = ['title', 'id']
 FIELDS_TYPE = ['title', 'director', 'cast']
 

@@ -10,4 +10,4 @@ Lead
 Collaborators
 ====
 
-- opacam
+- Pol Canelles, canellestudi@gmail.com, `opacam <https://github.com/opacam>`_
