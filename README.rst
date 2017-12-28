@@ -41,6 +41,7 @@ Requirements
 ::
 
     requests >= 2.0.1
+    requests-cache>=0.4.13
     bs4 >= 0.0.1
 
 
