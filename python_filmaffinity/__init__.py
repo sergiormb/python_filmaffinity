@@ -61,12 +61,10 @@ class FilmAffinity(Client):
                 url = self.url + 'advsearch.php?' + options
             page = self._load_url(url)
             movies = self._return_list_movies(page, 'search', top)
-
             if (len(movies) == 0):
                 url = self.url + 'advsearch.php?' + options
                 page = self._load_url(url)
                 movies = self._return_list_movies(page, 'search', top)
-                
         return movies
 
     def top_filmaffinity(self, top=10, **kwargs):
