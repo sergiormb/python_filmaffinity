@@ -44,16 +44,29 @@ class FilmAffinity(Client):
         movies = []
         if kwargs is not None:
             options = ''
+            simple_search = 'title' in kwargs
             for key, value in iter(kwargs.items()):
                 if key in FIELDS_TYPE:
+                    if (key != 'title'):
+                        simple_search = False
                     options += 'stext=%s&stype[]=%s&' % (str(kwargs[key]), key)
                 if key == 'from_year':
                     options += 'fromyear=%s&' % value
                 if key == 'to_year':
                     options += 'toyear=%s&' % value
-            url = self.url + 'advsearch.php?' + options
+            if (simple_search):
+                options = 'stype=title&stext=' + str(kwargs['title'])
+                url = self.url + 'search.php?' + options
+            else:
+                url = self.url + 'advsearch.php?' + options
             page = self._load_url(url)
             movies = self._return_list_movies(page, 'search', top)
+
+            if (len(movies) == 0):
+                url = self.url + 'advsearch.php?' + options
+                page = self._load_url(url)
+                movies = self._return_list_movies(page, 'search', top)
+                
         return movies
 
     def top_filmaffinity(self, top=10, **kwargs):
