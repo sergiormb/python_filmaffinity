@@ -34,3 +34,4 @@ singledispatch==3.4.0.3
 traitlets==4.3.2
 wcwidth==0.1.7
 wrapt==1.10.10
+certifi==2018.8.24
