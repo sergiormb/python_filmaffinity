@@ -48,11 +48,6 @@ class TestApi(TestCase):
             movie['images'], [],
             msg='Error on getting movie images')
 
-    def test_get_movie_by_args(self):
-        movie = self.service.get_movie(
-            title='The Dark Knight')
-        self.check_element(movie)
-
     def test_top_filmaffinity(self):
         movies = self.service.top_filmaffinity()
         self.check_list(movies)

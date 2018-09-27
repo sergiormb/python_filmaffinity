@@ -25,7 +25,8 @@ Pygments==2.2.0
 pylint==1.7.1
 pyparsing==2.2.0
 pytest==3.1.0
-requests==2.0.1
+requests==2.19.1
+requests[security]
 requests-cache==0.4.13
 scandir==1.5
 simplegeneric==0.8.1

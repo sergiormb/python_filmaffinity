@@ -22,7 +22,7 @@ setup(
     name=meta['__title__'],
     version=meta['__version__'],
     url=meta['__url__'],
-    setup_requires=['pytest-runner'],
+    setup_requires=[],
     tests_require=['pytest'],
     license=meta['__license__'],
     author=meta['__author__'],

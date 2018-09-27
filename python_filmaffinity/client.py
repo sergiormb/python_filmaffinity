@@ -1,5 +1,5 @@
-"""Client."""
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python
+# -*- coding: utf-8 -*- 
 
 import requests
 import requests_cache
@@ -109,14 +109,13 @@ class Client:
         if self.cache_remove_expired:
             self.session.remove_expired_responses()
 
-    def _load_url(self, url, headers=None, verify=None,
+    def _load_url(self, url, headers=None, verify=False,
                   timeout=3, force_server_response=False):
         """Return response from The FilmAffinity"""
         kwargs = {'headers': self.session_headers}
+        kwargs['verify'] = verify
         if headers:
             kwargs['headers'] = headers
-        if verify:
-            kwargs['verify'] = verify
         if timeout:
             kwargs['timeout'] = timeout
         if not self.session:
@@ -133,6 +132,7 @@ class Client:
 
     def _get_trailer(self, title):
         title += ' trailer'
+        title = title.encode("utf-8")
         title = quote(title)
         page = self._load_url(self.url_youtube + str(title))
         soup = BeautifulSoup(page.content, "html.parser")
