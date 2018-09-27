@@ -14,6 +14,8 @@ from setuptools import setup, find_packages
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
+with open("README.rst", "r") as fh:
+    long_description = fh.read()
 
 meta = {}
 exec(read('python_filmaffinity/__meta__.py'), meta)
@@ -22,12 +24,14 @@ setup(
     name=meta['__title__'],
     version=meta['__version__'],
     url=meta['__url__'],
-    setup_requires=['pytest-runner'],
+    setup_requires=[],
     tests_require=['pytest'],
     license=meta['__license__'],
     author=meta['__author__'],
     author_email=meta['__email__'],
     description=meta['__summary__'],
+    long_description=long_description,
+    long_description_content_type="text/x-rst",
     # this must be the same as the name above
     packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*",
                                     "tests", "*tests*"]),

@@ -5,7 +5,7 @@ __title__ = 'python_filmaffinity'
 __summary__ = 'Python wrapper for FilmAffinity'
 __url__ = 'https://github.com/sergiormb/python_filmaffinityy'
 
-__version__ = '0.0.10'
+__version__ = '0.0.11'
 
 __install_requires__ = [
     'requests>=2.0.1',
