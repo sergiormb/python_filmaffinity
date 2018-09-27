@@ -216,17 +216,17 @@ Changelog
 =========
 
 v0.0.11 (27-08-2018)
-*******************
+********************
 
 - Fixed errors
 
 v0.0.1O (27-08-2018)
-*******************
+********************
 
 - Fixed errors with SSL
 
 v0.0.09 (28-12-2017)
-*******************
+********************
 
 - Replaces cachetools for requests-cache
 
@@ -296,7 +296,7 @@ Lead
 - Sergio Pino, sergiormb88@gmail.com, `sergiormb.github.io <https://sergiormb.github.io>`_
 
 Collaborators
-====
+=============
 
 - opacam
 
