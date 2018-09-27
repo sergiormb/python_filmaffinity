@@ -135,7 +135,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'python_filmaffinity.tex', u'python\\_filmaffinity Documentation',
+    (master_doc, 'python_filmaffinity.tex',
+     u'python\\_filmaffinity Documentation',
      u'Sergio Pino', 'manual'),
 ]
 
@@ -160,6 +161,3 @@ texinfo_documents = [
      author, 'python_filmaffinity', 'One line description of project.',
      'Miscellaneous'),
 ]
-
-
-
