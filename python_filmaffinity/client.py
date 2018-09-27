@@ -8,7 +8,7 @@ import random
 from bs4 import BeautifulSoup
 from inspect import getsourcefile
 from os.path import join, dirname, abspath
-
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from .config import FIELDS_MOVIE
 from .pages import DetailPage, SearchPage, TopPage, TopServicePage, ImagesPage
 from .exceptions import (
@@ -23,7 +23,7 @@ except ImportError:
 
 current_folder = dirname(abspath(getsourcefile(lambda: 0)))
 supported_languages = ['en', 'es', 'mx', 'ar', 'cl', 'co']
-
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 class Client:
     """Client to make requests to FilmAffinity.
