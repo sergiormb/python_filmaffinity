@@ -54,6 +54,7 @@ class TestApi(TestCase):
         self.check_list(movies)
 
     def test_top_series(self):
+        time.sleep(3)
         # For renovate the headers 
         self.service = python_filmaffinity.FilmAffinity()
         movies = self.service.top_tv_series()
@@ -62,6 +63,7 @@ class TestApi(TestCase):
         self.assertEqual(len(movies), 5)
         movies = self.service.top_tv_series(top=80)
         self.assertEqual(len(movies), 30)
+        time.sleep(3)
         movies = self.service.top_tv_series(from_year='2010', to_year='2011')
         self.check_list(movies)
 
