@@ -25,7 +25,6 @@ setup(
     version=meta['__version__'],
     url=meta['__url__'],
     setup_requires=[],
-    tests_require=['pytest'],
     license=meta['__license__'],
     author=meta['__author__'],
     author_email=meta['__email__'],
