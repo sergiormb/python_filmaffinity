@@ -138,11 +138,7 @@ class Client:
         title = quote(title)
         page = self._load_url(self.url_youtube + str(title))
         soup = BeautifulSoup(page.content, "html.parser")
-        vid = soup.findAll(
-            attrs={
-                'class': 'yt-simple-endpoint style-scope ytd-video-renderer'
-            }
-        )[0]
+        vid = soup.findAll(attrs={'class': 'yt-uix-tile-link'})[0]
         return 'https://www.youtube.com' + vid['href']
 
     def _get_movie_images(self, fa_id):
