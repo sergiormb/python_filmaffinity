@@ -49,10 +49,13 @@ class TestApi(TestCase):
             msg='Error on getting movie images')
 
     def test_top_filmaffinity(self):
+        time.sleep(3)
         movies = self.service.top_filmaffinity()
         self.check_list(movies)
 
     def test_top_series(self):
+        # For renovate the headers 
+        self.service = python_filmaffinity.FilmAffinity()
         movies = self.service.top_tv_series()
         self.check_list(movies)
         movies = self.service.top_tv_series(top=5)
@@ -82,6 +85,8 @@ class TestApi(TestCase):
         self.check_list(movies)
 
     def test_top_movistar(self):
+        # For renovate the headers 
+        self.service = python_filmaffinity.FilmAffinity()
         movies = self.service.top_movistar(top=10)
         self.check_list(movies)
 
@@ -115,6 +120,8 @@ class TestApi(TestCase):
         self.check_element(movie)
 
     def test_recommend_rakuten(self):
+        # For renovate the headers 
+        self.service = python_filmaffinity.FilmAffinity()
         movie = self.service.recommend_rakuten()
         self.check_element(movie)
 
@@ -123,6 +130,8 @@ class TestApi(TestCase):
         self.assertNotEqual(trailer, None)
 
     def test_top_dvd(self):
+        # For renovate the headers 
+        self.service = python_filmaffinity.FilmAffinity()
         movies = self.service.top_dvd(top=10)
         self.check_list(movies)
         movies = self.service.top_dvd(top=20)
