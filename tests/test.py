@@ -66,10 +66,12 @@ class TestApi(TestCase):
         self.check_list(movies)
 
     def test_top_premieres(self):
+        time.sleep(3)
         movies = self.service.top_premieres()
         self.check_list(movies)
 
     def test_top_filmaffinity_years(self):
+        time.sleep(3)
         movies = self.service.top_filmaffinity(
             from_year='2010', to_year='2011')
         self.check_list(movies)
@@ -81,6 +83,7 @@ class TestApi(TestCase):
         self.check_list(movies)
 
     def test_top_netflix(self):
+        time.sleep(3)
         movies = self.service.top_netflix(top=10)
         self.check_list(movies)
 
@@ -95,6 +98,7 @@ class TestApi(TestCase):
         self.check_list(movies)
 
     def test_top_hbo(self):
+        time.sleep(3)
         movies = self.service.top_hbo(top=10)
         self.check_list(movies)
 
@@ -103,6 +107,7 @@ class TestApi(TestCase):
         self.check_list(movies)
 
     def test_recommend_netflix(self):
+        time.sleep(3)
         movie = self.service.recommend_netflix()
         self.check_element(movie)
 
@@ -116,6 +121,7 @@ class TestApi(TestCase):
         self.check_element(movie)
 
     def test_recommend_movistar(self):
+        time.sleep(3)
         movie = self.service.recommend_movistar()
         self.check_element(movie)
 
@@ -125,11 +131,8 @@ class TestApi(TestCase):
         movie = self.service.recommend_rakuten()
         self.check_element(movie)
 
-    def test_trailer(self):
-        trailer = self.service._get_trailer('Avatar')
-        self.assertNotEqual(trailer, None)
-
     def test_top_dvd(self):
+        time.sleep(3)
         # For renovate the headers 
         self.service = python_filmaffinity.FilmAffinity()
         movies = self.service.top_dvd(top=10)
