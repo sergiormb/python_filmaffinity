@@ -133,13 +133,17 @@ class Client:
         return response
 
     def _get_trailer(self, title):
+        url_video = None
         title += ' trailer'
         title = title.encode("utf-8")
         title = quote(title)
         page = self._load_url(self.url_youtube + str(title))
         soup = BeautifulSoup(page.content, "html.parser")
-        vid = soup.findAll(attrs={'class': 'yt-uix-tile-link'})[0]
-        return 'https://www.youtube.com' + vid['href']
+        vid = soup.findAll(attrs={'class': 'yt-uix-tile-link'})
+        if vid:
+            vid = vid[0]
+            url_video = 'https://www.youtube.com' + vid['href']
+        return url_video
 
     def _get_movie_images(self, fa_id):
         url = self.url_images + str(fa_id)
@@ -189,7 +193,9 @@ class Client:
             page = DetailPage(soup)
             movie = self._get_movie_data(page, fa_id=id)
             if trailer:
-                movie.update({'trailer': self._get_trailer(movie['title'])})
+                trailer_url = self._get_trailer(movie['title'])
+                if trailer_url:
+                    movie.update({'trailer': trailer_url})
         if images and movie.get('id', False):
             movie.update({'images': self._get_movie_images(movie['id'])})
         return movie

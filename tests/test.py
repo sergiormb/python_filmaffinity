@@ -126,7 +126,7 @@ class TestApi(TestCase):
         self.check_element(movie)
 
     def test_trailer(self):
-        trailer = self.service._get_trailer('Batman')
+        trailer = self.service._get_trailer('Avatar')
         self.assertNotEqual(trailer, None)
 
     def test_top_dvd(self):
