@@ -86,6 +86,13 @@ class Client:
             )
         }
 
+    def _generate_new_session_headers(self):
+        self.session_headers = {
+            'User-Agent': generate_user_agent(
+                device_type="desktop", os=('mac', 'linux')
+            )
+        }
+
     def _get_cache_file(self, cache_path=None):
         """Returns the cache file used by requests-cache
         """
@@ -113,6 +120,7 @@ class Client:
     def _load_url(self, url, headers=None, verify=None,
                   timeout=3, force_server_response=False):
         """Return response from The FilmAffinity"""
+        self._generate_new_session_headers()
         kwargs = {'headers': self.session_headers}
         if headers:
             kwargs['verify'] = verify
