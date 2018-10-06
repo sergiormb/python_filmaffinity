@@ -1,5 +1,5 @@
 from unittest import TestCase
-
+import time
 import sys
 import os
 import random
@@ -72,6 +72,7 @@ class TestApi(TestCase):
         self.check_list(movies)
 
     def test_search_years(self):
+        time.sleep(3)
         movies = self.service.search(
             title='Batman', from_year='2000', to_year='2011')
         self.check_list(movies)
@@ -105,6 +106,7 @@ class TestApi(TestCase):
         self.check_element(movie)
 
     def test_recommend_filmin(self):
+        time.sleep(3)
         movie = self.service.recommend_filmin()
         self.check_element(movie)
 

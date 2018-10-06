@@ -6,6 +6,7 @@ import requests_cache
 import random
 
 from bs4 import BeautifulSoup
+from user_agent import generate_user_agent
 from inspect import getsourcefile
 from os.path import join, dirname, abspath
 from .config import FIELDS_MOVIE
@@ -80,9 +81,10 @@ class Client:
         self.cache_remove_expired = cache_remove_expired
         self.session = None
         self.session_headers = {
-            'User-Agent':
-                '"Mozilla/5.0 (X11; Linux x86_64; rv:36.0)'
-                ' Gecko/20100101 Firefox/36.0"'}
+            'User-Agent': generate_user_agent(
+                device_type="desktop", os=('mac', 'linux')
+            )
+        }
 
     def _get_cache_file(self, cache_path=None):
         """Returns the cache file used by requests-cache
