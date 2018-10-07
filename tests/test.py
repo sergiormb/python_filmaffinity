@@ -19,6 +19,9 @@ sys.path.insert(0, path + '/../')
 
 class TestApi(TestCase):
     service = python_filmaffinity.FilmAffinity()
+    
+    def tearDown(self):
+        time.sleep(3)
 
     def check_list(self, movies):
         self.assertNotEqual(0, len(movies))
@@ -49,12 +52,10 @@ class TestApi(TestCase):
             msg='Error on getting movie images')
 
     def test_top_filmaffinity(self):
-        time.sleep(3)
         movies = self.service.top_filmaffinity()
         self.check_list(movies)
 
     def test_top_series(self):
-        time.sleep(3)
         # For renovate the headers 
         self.service = python_filmaffinity.FilmAffinity()
         movies = self.service.top_tv_series()
@@ -68,24 +69,20 @@ class TestApi(TestCase):
         self.check_list(movies)
 
     def test_top_premieres(self):
-        time.sleep(3)
         movies = self.service.top_premieres()
         self.check_list(movies)
 
     def test_top_filmaffinity_years(self):
-        time.sleep(3)
         movies = self.service.top_filmaffinity(
             from_year='2010', to_year='2011')
         self.check_list(movies)
 
     def test_search_years(self):
-        time.sleep(3)
         movies = self.service.search(
             title='Batman', from_year='2000', to_year='2011')
         self.check_list(movies)
 
     def test_top_netflix(self):
-        time.sleep(3)
         movies = self.service.top_netflix(top=10)
         self.check_list(movies)
 
@@ -100,7 +97,6 @@ class TestApi(TestCase):
         self.check_list(movies)
 
     def test_top_hbo(self):
-        time.sleep(3)
         movies = self.service.top_hbo(top=10)
         self.check_list(movies)
 
@@ -109,7 +105,6 @@ class TestApi(TestCase):
         self.check_list(movies)
 
     def test_recommend_netflix(self):
-        time.sleep(3)
         movie = self.service.recommend_netflix()
         self.check_element(movie)
 
@@ -118,12 +113,10 @@ class TestApi(TestCase):
         self.check_element(movie)
 
     def test_recommend_filmin(self):
-        time.sleep(3)
         movie = self.service.recommend_filmin()
         self.check_element(movie)
 
     def test_recommend_movistar(self):
-        time.sleep(3)
         movie = self.service.recommend_movistar()
         self.check_element(movie)
 
@@ -134,7 +127,6 @@ class TestApi(TestCase):
         self.check_element(movie)
 
     def test_top_dvd(self):
-        time.sleep(3)
         # For renovate the headers 
         self.service = python_filmaffinity.FilmAffinity()
         movies = self.service.top_dvd(top=10)
