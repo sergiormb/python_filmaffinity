@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v0.0.13 (07-09-2018)
+********************
+
+- Adds proxies and random user-agent in headers
+
 v0.0.12 (27-08-2018)
 ********************
 

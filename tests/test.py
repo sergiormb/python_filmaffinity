@@ -19,7 +19,7 @@ sys.path.insert(0, path + '/../')
 
 class TestApi(TestCase):
     service = python_filmaffinity.FilmAffinity()
-    
+
     def tearDown(self):
         time.sleep(4)
 
@@ -56,7 +56,6 @@ class TestApi(TestCase):
         self.check_list(movies)
 
     def test_top_series(self):
-        # For renovate the headers 
         self.service = python_filmaffinity.FilmAffinity()
         movies = self.service.top_tv_series()
         self.check_list(movies)
@@ -89,7 +88,6 @@ class TestApi(TestCase):
         self.check_list(movies)
 
     def test_top_movistar(self):
-        # For renovate the headers 
         self.service = python_filmaffinity.FilmAffinity()
         movies = self.service.top_movistar(top=10)
         self.check_list(movies)
@@ -123,13 +121,11 @@ class TestApi(TestCase):
         self.check_element(movie)
 
     def test_recommend_rakuten(self):
-        # For renovate the headers 
         self.service = python_filmaffinity.FilmAffinity()
         movie = self.service.recommend_rakuten()
         self.check_element(movie)
 
     def test_top_dvd(self):
-        # For renovate the headers 
         self.service = python_filmaffinity.FilmAffinity()
         movies = self.service.top_dvd(top=10)
         time.sleep(4)
