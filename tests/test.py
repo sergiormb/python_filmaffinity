@@ -132,10 +132,13 @@ class TestApi(TestCase):
         # For renovate the headers 
         self.service = python_filmaffinity.FilmAffinity()
         movies = self.service.top_dvd(top=10)
+        time.sleep(4)
         self.check_list(movies)
         movies = self.service.top_dvd(top=20)
+        time.sleep(4)
         self.assertEqual(len(movies), 20)
         movies = self.service.top_dvd(top=80)
+        time.sleep(4)
         self.assertEqual(len(movies), 40)
         self.check_list(movies)
 
