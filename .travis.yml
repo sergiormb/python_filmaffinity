@@ -7,7 +7,6 @@ python:
 install:
   - make travisci-install
 script:
-  - make travisci-test
   - coverage run --source python_filmaffinity setup.py test
 after_success:
   - coveralls
