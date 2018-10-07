@@ -122,7 +122,9 @@ class Client:
         """Return response from The FilmAffinity"""
         self._generate_new_session_headers()
         kwargs = {'headers': self.session_headers}
-        kwargs.update({"proxies": get_random_proxy()})
+        proxies = get_random_proxy()
+        if proxies:
+            kwargs.update({"proxies": proxies})
         if headers:
             kwargs['verify'] = verify
         if headers:
