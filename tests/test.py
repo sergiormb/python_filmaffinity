@@ -21,7 +21,7 @@ class TestApi(TestCase):
     service = python_filmaffinity.FilmAffinity()
     
     def tearDown(self):
-        time.sleep(3)
+        time.sleep(4)
 
     def check_list(self, movies):
         self.assertNotEqual(0, len(movies))
