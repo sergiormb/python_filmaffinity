@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import __meta__
+from .__meta__ import  *
 from .client import Client
 from .config import FIELDS_TYPE
 
