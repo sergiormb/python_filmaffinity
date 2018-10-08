@@ -5,12 +5,13 @@ __title__ = 'python_filmaffinity'
 __summary__ = 'Python wrapper for FilmAffinity'
 __url__ = 'https://github.com/sergiormb/python_filmaffinityy'
 
-__version__ = '0.0.13'
+__version__ = '0.0.14'
 
 __install_requires__ = [
     'requests>=2.0.1',
     'requests-cache>=0.4.13',
-    'bs4>=0.0.1'
+    'bs4>=0.0.1',
+    'user_agent==0.1.9',
 ]
 
 __author__ = 'sergiormb'

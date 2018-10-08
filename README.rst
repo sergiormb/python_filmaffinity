@@ -215,6 +215,11 @@ recommend HBO, Netflix, Filmin, Movistar, Rakuten
 Changelog
 =========
 
+v0.0.14 (08-09-2018)
+********************
+
+- Fixed errors
+
 v0.0.13 (07-09-2018)
 ********************
 
