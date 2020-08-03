@@ -37,6 +37,24 @@ class FilmAffinity(Client):
             cast: Search by cast
             from_year: Search from the year
             to_year: Search until the year
+            genre: 
+                AN: Animación
+                AV: Aventuras
+                BE: Bélico
+                C-F: Ciencia Ficción
+                F-N: Cine Negro
+                CO: Comedia
+                DESC: Desconocido
+                DO: Documental
+                DR: Drama
+                FAN: Fantástico
+                INF: Infantil
+                INT: Intriga
+                MU: Musical
+                RO: Romance
+                TV_SE: Serie de TV
+                TE: Terror
+                WE: Western
         Returns:
             TYPE: Lis with movies data
         """
@@ -54,6 +72,8 @@ class FilmAffinity(Client):
                     options += 'fromyear=%s&' % value
                 if key == 'to_year':
                     options += 'toyear=%s&' % value
+                if key == 'genre':
+                    options += 'genre=%s&' % value
             if (simple_search):
                 options = 'stype=title&stext=' + str(kwargs['title'])
                 url = self.url + 'search.php?' + options
