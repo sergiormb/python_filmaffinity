@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 FIELDS_MOVIE = ['title', 'id']
-FIELDS_TYPE = ['title', 'director', 'cast']
+FIELDS_TYPE = ['title', 'director', 'cast', 'stext']
 
 
 FIELDS_PAGE_MOVIES = ['id', 'title', 'rating', 'directors', 'poster']
