@@ -8,8 +8,8 @@ __url__ = 'https://github.com/sergiormb/python_filmaffinityy'
 __version__ = '0.0.15'
 
 __install_requires__ = [
-    'requests>=2.0.1',
-    'requests-cache>=0.4.13',
+    'requests>=2.24.0',
+    'requests-cache>=0.5.2',
     'bs4>=0.0.1',
     'user_agent==0.1.9',
 ]
