@@ -64,6 +64,8 @@ class Page(object):
         cell = director_cell.find_all('span', {'class': 'nb'})
         # Sometimes the FilmAffinity classification
         # appears inside a directors tag, so we filter it
+        if not cell:
+            return None
         return [
             i.a['title'] for i in cell if i.a['title'] not in classifications
         ]
@@ -73,13 +75,18 @@ class Page(object):
         actors_cell = self.soup.find(
             'div', {'class': ['cast', 'mc-cast']})
         if not actors_cell:
-            return []
+            return None
         cell = actors_cell.find_all("span", {'class': 'nb'})
         # Sometimes the  FilmAffinity classification
         # appears inside a actors tag, so we filter it
-        return [
-            i.a['title'] for i in cell if i.a['title'] not in classifications
-        ]
+        if not cell:
+            return None
+        try:
+            return [
+                i.a['title'] for i in cell if i.a['title'] not in classifications
+            ] if cell else None
+        except:
+            return None
 
     def get_poster(self):
         """Get poster."""
@@ -93,16 +100,12 @@ class Page(object):
     def get_duration(self):
         """Get Duration."""
         cell = self.soup.find('div', {'class': 'duration'})
-        if not cell:
-            return None
-        return cell.get_text().strip()
+        return cell.get_text().strip() if cell else None
 
     def get_year(self):
         """Get the year."""
         cell = self.soup.find('div', {'class': 'mc-data'})
-        if not cell:
-            return self._get_year_from_title()
-        return cell.find_all('div')[0].get_text()
+        return cell.find_all('div')[0].get_text() if cell else self._get_year_from_title()
 
     def _get_year_from_title(self):
         """Get the year from title."""
@@ -110,9 +113,7 @@ class Page(object):
         # so...we try to guess from the title
         t = self.get_title()
         re_match = pattern_title_year.match(t if t else '')
-        if not re_match:
-            return None
-        return re_match.group(2)
+        return re_match.group(2) if re_match else None
 
     def get_country(self):
         """Get the country."""
@@ -124,23 +125,17 @@ class Page(object):
     def get_genre(self):
         """Get the genre."""
         cell = self.soup.find('div', {'class': 'mc-data'})
-        if not cell:
-            return None
-        return cell.find('a', {'class': 'genre'}).get_text()
+        return cell.find('a', {'class': 'genre'}).get_text() if cell else None
 
     def get_description(self):
         """Get the description."""
         cell = self.soup.find('div', {'class': 'mc-data'})
-        if not cell:
-            return None
-        return cell.find('a', {'class': 'synop-text'}).get_text()
+        return cell.find('a', {'class': 'synop-text'}).get_text() if cell else None
 
     def get_number_of_votes(self):
         """Get the number of votes."""
         cell = self.soup.find("div", {"class": ['rat-count', 'ratcount-box']})
-        if not cell:
-            return None
-        return cell.get_text().strip()
+        return cell.get_text().strip() if cell else None
 
     def get_awards(self):
         """Get the awards."""
