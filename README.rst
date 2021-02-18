@@ -22,7 +22,7 @@ Pip
 ***
 ::
 
-    pip install python_filmaffinity
+    pip install python-filmaffinity
 
 
 From Source
@@ -318,7 +318,8 @@ Lead
 Collaborators
 =============
 
-- opacam
+- opacam https://github.com/opacam
+- jcea https://github.com/jcea
 
 License
 =======
