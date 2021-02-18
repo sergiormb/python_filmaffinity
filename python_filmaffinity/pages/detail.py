@@ -10,7 +10,15 @@ class DetailPage(Page):
         name = None
         name_cell = self.soup.find("span", {"itemprop": 'name'})
         if name_cell:
-            name = name_cell.get_text()
+            name = name_cell.get_text().strip()
+        return name
+
+    def get_original_title(self):
+        """Get the original title."""
+        name = None
+        name_cell = self.soup.find("dl", {"class": 'movie-info'})
+        if name_cell:
+            name = name_cell.find('dd').get_text().strip()
         return name
 
     def get_year(self):

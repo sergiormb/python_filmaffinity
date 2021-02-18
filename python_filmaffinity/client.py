@@ -181,6 +181,7 @@ class Client:
         return {
             'id': fa_id or page.get_id(),
             'title': page.get_title(),
+            'original_title': page.get_original_title(),
             'year': page.get_year(),
             'duration': page.get_duration(),
             'rating': page.get_rating(),
