@@ -10,7 +10,7 @@ class DetailPage(Page):
         name = None
         name_cell = self.soup.find("span", {"itemprop": 'name'})
         if name_cell:
-            name = name_cell.get_text()
+            name = name_cell.get_text().strip()
         return name
 
     def get_year(self):
