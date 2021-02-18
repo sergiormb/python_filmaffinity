@@ -1,12 +1,3 @@
-"""
-omdb
-====
-
-Python wrapper for OMDbAPI.com.
-
-Project: https://github.com/dgilland/omdb.py
-"""
-
 import os
 from setuptools import setup, find_packages
 
