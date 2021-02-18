@@ -71,7 +71,7 @@ class DetailPage(Page):
     def get_directors(self):
         """Get the directors."""
         directors = []
-        directors_cell = self.soup.find_all("span", {"class": 'director'})
+        directors_cell = self.soup.find_all("span", {"itemprop": 'director'})
         for director_cell in directors_cell:
             director = director_cell.find("span", {"itemprop": 'name'})
             directors.append(director.get_text())
