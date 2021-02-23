@@ -220,6 +220,7 @@ v0.0.17 (18-02-2021)
 
 - Deleted spaces at the end of the title (@jcea)
 - Added original_title (@jcea)
+- Fix directors scraping (@jcea)
 
 v0.0.15 (03-08-2020)
 ********************
