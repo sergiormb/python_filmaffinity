@@ -218,6 +218,7 @@ Changelog
 v0.0.18 (XXXXXX)
 ********************
 
+- Correctly provide the trailers listed in filmaffinity (@jcea)
 - Spurious search in youtube deleted (@jcea)
 - Extract correctly when multiple genres (@jcea)
 - Added "writers", "music", "cinematography" and "producers" (@jcea)
