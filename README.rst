@@ -218,6 +218,7 @@ Changelog
 v0.0.18 (XXXXXX)
 ********************
 
+- Extract correctly when multiple genres (@jcea)
 - Added "writers", "music", "cinematography" and "producers" (@jcea)
 - Regression processing "original_title" in searches (@jcea)
 

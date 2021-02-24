@@ -142,9 +142,8 @@ class DetailPage(Page):
     def get_genre(self):
         """Get the genre."""
         genres = []
-        dc = self.soup.find("span", {"itemprop": 'genre'})
-        if dc:
-            [genres.append(i.get_text()) for i in dc.find_all("a")]
+        for i in self.soup.find_all("span", {"itemprop": 'genre'}):
+            genres.append(i.find('a').get_text())
         return genres
 
     def get_awards(self):
