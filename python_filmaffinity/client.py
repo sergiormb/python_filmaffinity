@@ -228,7 +228,7 @@ class Client:
             if movies_cell:
                 cell = movies_cell[0]
                 id = str(cell['data-movie-id'])
-                movie = self._get_movie_by_id(id, 'search', images)
+                movie = self._get_movie_by_id(id, trailer, images)
         return movie
 
     def _return_list_movies(self, page, method, top=10):
