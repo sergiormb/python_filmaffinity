@@ -192,6 +192,7 @@ class Client:
             'music': page.get_music(),
             'cinematography': page.get_cinematography(),
             'actors': page.get_actors(),
+            'producers': page.get_producers(),
             'poster': page.get_poster(),
             'country': page.get_country(),
             'genre': page.get_genre(),

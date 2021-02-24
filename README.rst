@@ -218,7 +218,7 @@ Changelog
 v0.0.18 (XXXXXX)
 ********************
 
-- Added "writers", "music" and "cinematography" (@jcea)
+- Added "writers", "music", "cinematography" and "producers" (@jcea)
 - Regression processing "original_title" in searches (@jcea)
 
 v0.0.17 (18-02-2021)

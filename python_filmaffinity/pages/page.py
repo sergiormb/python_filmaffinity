@@ -44,6 +44,10 @@ class Page(object):
         title = self.soup.find('div', {'class': 'mc-title'})
         return title.get_text() if title else None
 
+    def get_original_title(self):
+        """ Get original title."""
+        return None
+
     def get_rating(self):
         """Get rating."""
         cell = self.soup.find(
@@ -80,6 +84,10 @@ class Page(object):
 
     def get_cinematography(self):
         """Get cinematography."""
+        return None
+
+    def get_producers(self):
+        """Get producers."""
         return None
 
     def get_actors(self):
