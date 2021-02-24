@@ -334,7 +334,7 @@ Collaborators
 =============
 
 - opacam https://github.com/opacam
-- jcea https://github.com/jcea
+- jcea - https://www.jcea.es - https://blog.jcea.es - https://github.com/jcea
 
 License
 =======
