@@ -218,6 +218,8 @@ Changelog
 v0.0.18 (XXXXXX)
 ********************
 
+- When images are requested, lets provide also the country where
+  they were published (@jcea)
 - Correctly provide the trailers listed in filmaffinity (@jcea)
 - Spurious search in youtube deleted (@jcea)
 - Extract correctly when multiple genres (@jcea)

@@ -2,6 +2,7 @@
 import re
 from .page import Page
 pattern_thumbnail = re.compile(r'\((.*?)\)', re.IGNORECASE)
+pattern_country = re.compile(r'>País: </strong>(.*?)</div>')
 
 
 class ImagesPage(Page):
@@ -20,13 +21,17 @@ class ImagesPage(Page):
             if hasattr(i, 'a'):
                 im = i.a['href']
                 th = None
+                country = pattern_country.search(i.a['title'])
+                if country:
+                    country = country.group(1)
                 if hasattr(i.a, 'div'):
                     re_th = pattern_thumbnail.search(
                         i.a.div['style'])
                     if re_th:
                         th = re_th.group(1)
                 imgs.append({'image': im,
-                             'thumbnail': th})
+                             'thumbnail': th,
+                             'country': country})
         return imgs
 
     def get_posters(self):
