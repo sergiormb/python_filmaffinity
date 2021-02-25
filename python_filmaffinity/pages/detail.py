@@ -135,8 +135,9 @@ class DetailPage(Page):
         """Get producers."""
         producers = []
         dd = self.soup.find('dd', {'class': 'card-producer'})
-        for nb in dd.find_all('span', {'class': 'nb'}):
-            producers.append(nb.find('span').get_text())
+        if dd:
+            for nb in dd.find_all('span', {'class': 'nb'}):
+                producers.append(nb.find('span').get_text())
         return producers
 
     def get_genre(self):
