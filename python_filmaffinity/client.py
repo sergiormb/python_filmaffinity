@@ -72,7 +72,7 @@ class Client:
         self.url = self.base_url + self.lang + '/'
         self.url_film = self.url + 'film'
         self.url_images = self.url + 'filmimages.php?movie_id='
-        self.url_youtube = 'https://www.youtube.com/results?search_query='
+        self.url_trailers = self.url + 'evideos.php?movie_id='
 
         # initialize requests-cache
         self.cache_expires = cache_expires
@@ -143,18 +143,11 @@ class Client:
             raise FilmAffinityConnectionError(er)
         return response
 
-    def _get_trailer(self, title):
-        url_video = None
-        title += ' trailer'
-        title = title.encode("utf-8")
-        title = quote(title)
-        page = self._load_url(self.url_youtube + str(title))
+    def _get_trailer(self, fa_id):
+        page = self._load_url(self.url_trailers + str(fa_id))
         soup = BeautifulSoup(page.content, "html.parser")
-        vid = soup.findAll(attrs={'class': 'yt-uix-tile-link'})
-        if vid:
-            vid = vid[0]
-            url_video = 'https://www.youtube.com' + vid['href']
-        return url_video
+        vid = [i['src'] for i in soup.find_all('iframe')]
+        return vid
 
     def _get_movie_images(self, fa_id):
         url = self.url_images + str(fa_id)
@@ -188,7 +181,11 @@ class Client:
             'votes': page.get_number_of_votes(),
             'description': page.get_description(),
             'directors': page.get_directors(),
+            'writers': page.get_writers(),
+            'music': page.get_music(),
+            'cinematography': page.get_cinematography(),
             'actors': page.get_actors(),
+            'producers': page.get_producers(),
             'poster': page.get_poster(),
             'country': page.get_country(),
             'genre': page.get_genre(),
@@ -205,7 +202,7 @@ class Client:
             page = DetailPage(soup)
             movie = self._get_movie_data(page, fa_id=id)
             if trailer:
-                trailer_url = self._get_trailer(movie['title'])
+                trailer_url = self._get_trailer(fa_id=id)
                 if trailer_url:
                     movie.update({'trailer': trailer_url})
         if images and movie.get('id', False):
@@ -224,7 +221,7 @@ class Client:
             if movies_cell:
                 cell = movies_cell[0]
                 id = str(cell['data-movie-id'])
-                movie = self._get_movie_by_id(id, 'search', images)
+                movie = self._get_movie_by_id(id, trailer, images)
         return movie
 
     def _return_list_movies(self, page, method, top=10):

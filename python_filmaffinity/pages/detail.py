@@ -101,12 +101,50 @@ class DetailPage(Page):
             country = dc.img['title']
         return country
 
+    def get_writers(self):
+        """Get writers."""
+        writers = []
+        for dt in self.soup.find_all('dt'):
+            if dt.get_text() == 'Guion':
+                dd = dt.next_sibling.next_sibling
+                for nb in dd.find_all('span', {'class': 'nb'}):
+                    writers.append(nb.find('span').get_text())
+        return writers
+
+    def get_music(self):
+        """Get music."""
+        music = []
+        for dt in self.soup.find_all('dt'):
+            if dt.get_text() == 'Música':
+                dd = dt.next_sibling.next_sibling
+                for nb in dd.find_all('span', {'class': 'nb'}):
+                    music.append(nb.find('span').get_text())
+        return music
+
+    def get_cinematography(self):
+        """Get cinematography."""
+        cinematography = []
+        for dt in self.soup.find_all('dt'):
+            if dt.get_text() == 'Fotografía':
+                dd = dt.next_sibling.next_sibling
+                for nb in dd.find_all('span', {'class': 'nb'}):
+                    cinematography.append(nb.find('span').get_text())
+        return cinematography
+
+    def get_producers(self):
+        """Get producers."""
+        producers = []
+        dd = self.soup.find('dd', {'class': 'card-producer'})
+        if dd:
+            for nb in dd.find_all('span', {'class': 'nb'}):
+                producers.append(nb.find('span').get_text())
+        return producers
+
     def get_genre(self):
         """Get the genre."""
         genres = []
-        dc = self.soup.find("span", {"itemprop": 'genre'})
-        if dc:
-            [genres.append(i.get_text()) for i in dc.find_all("a")]
+        for i in self.soup.find_all("span", {"itemprop": 'genre'}):
+            genres.append(i.find('a').get_text())
         return genres
 
     def get_awards(self):

@@ -215,6 +215,17 @@ recommend HBO, Netflix, Filmin, Movistar, Rakuten
 Changelog
 =========
 
+v0.0.18 (XXXXXX)
+********************
+
+- When images are requested, lets provide also the country where
+  they were published (@jcea)
+- Correctly provide the trailers listed in filmaffinity (@jcea)
+- Spurious search in youtube deleted (@jcea)
+- Extract correctly when multiple genres (@jcea)
+- Added "writers", "music", "cinematography" and "producers" (@jcea)
+- Regression processing "original_title" in searches (@jcea)
+
 v0.0.17 (18-02-2021)
 ********************
 
@@ -325,7 +336,7 @@ Collaborators
 =============
 
 - opacam https://github.com/opacam
-- jcea https://github.com/jcea
+- jcea - https://www.jcea.es/ - https://blog.jcea.es/ - https://github.com/jcea
 
 License
 =======
