@@ -74,6 +74,22 @@ class Page(object):
             i.a['title'] for i in cell if i.a['title'] not in classifications
         ]
 
+    def get_writers(self):
+        """Get writers."""
+        return None
+
+    def get_music(self):
+        """Get music."""
+        return None
+
+    def get_cinematography(self):
+        """Get cinematography."""
+        return None
+
+    def get_producers(self):
+        """Get producers."""
+        return None
+
     def get_actors(self):
         """Get the actors."""
         actors_cell = self.soup.find(
