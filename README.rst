@@ -215,7 +215,7 @@ recommend HBO, Netflix, Filmin, Movistar, Rakuten
 Changelog
 =========
 
-v0.0.18 (XXXXXX)
+v0.0.18 (26-02-2021)
 ********************
 
 - When images are requested, lets provide also the country where
