@@ -98,7 +98,7 @@ class DetailPage(Page):
         country = ''
         dc = self.soup.find("span", {"id": 'country-img'})
         if dc:
-            country = dc.img['title']
+            country = dc.img['alt']
         return country
 
     def get_writers(self):

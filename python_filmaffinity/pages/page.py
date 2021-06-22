@@ -140,7 +140,7 @@ class Page(object):
         cell = self.soup.find('div', {'class': ['mc-data', 'mc-title']})
         if not cell:
             return None
-        return cell.img['title']
+        return cell.img['alt']
 
     def get_genre(self):
         """Get the genre."""

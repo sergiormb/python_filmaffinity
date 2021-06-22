@@ -215,6 +215,11 @@ recommend HBO, Netflix, Filmin, Movistar, Rakuten
 Changelog
 =========
 
+v0.0.19 (22-06-2021)
+********************
+
+- Fixed errors in get_country
+
 v0.0.18 (26-02-2021)
 ********************
 
