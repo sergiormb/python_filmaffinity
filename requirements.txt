@@ -1,7 +1,7 @@
 setuptools==49.2.1
 aarpy==0.1
 appdirs==1.4.3
-astroid==1.5.2
+astroid==2.4.0
 backports.shutil-get-terminal-size==1.0.0
 beautifulsoup4==4.9.1
 bs4==0.0.1
@@ -12,7 +12,7 @@ enum34==1.1.6
 ipython==5.3.0
 ipython-genutils==0.2.0
 isort==4.2.5
-lazy-object-proxy==1.3.1
+lazy-object-proxy==1.4.*
 mccabe==0.6.1
 packaging==16.8
 pathlib2==2.2.1
@@ -27,12 +27,12 @@ pyparsing==2.2.0
 pytest==6.0.1
 requests==2.20.0
 requests[security]
-requests-cache==0.5.2
+requests-cache==0.6.4
 scandir==1.5
 simplegeneric==0.8.1
 singledispatch==3.4.0.3
 traitlets==4.3.2
 wcwidth==0.1.7
-wrapt==1.10.10
+wrapt==1.11
 certifi==2020.6.20
 user_agent==0.1.9 
