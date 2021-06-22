@@ -3,10 +3,8 @@ Python FilmAffinity
 *******************
 This is a simple python scraping for the FilmAffinity.
 
-.. image:: https://travis-ci.org/sergiormb/python_filmaffinity.svg?branch=master
-    :target: https://travis-ci.org/sergiormb/python_filmaffinity
-.. image:: https://coveralls.io/repos/github/sergiormb/python_filmaffinity/badge.svg?branch=master
-    :target: https://coveralls.io/github/sergiormb/python_filmaffinity?branch=master
+.. image:: https://github.com/sergiormb/python_filmaffinity/workflows/Tests/badge.svg?branch=master
+    :target: https://github.com/sergiormb/python_filmaffinity/actions/workflows/python-test.yml?query=branch%3Amaster
 .. image:: https://img.shields.io/github/license/mashape/apistatus.svg   
     :target: https://github.com/sergiormb/python_filmaffinity/blob/master/LICENSE.rst
 .. image:: https://img.shields.io/pypi/pyversions/Django.svg   

@@ -86,17 +86,3 @@ docs:
 .PHONY: serve-docs
 serve-docs:
 	cd docs/_build/html; python2 -m SimpleHTTPServer 8000
-
-##
-# TravisCI
-##
-
-.PHONY: travisci-install
-travisci-install:
-	pip install -r requirements.txt
-
-.PHONY: travisci-test
-travisci-test:
-	pep8 $(PYTEST_TARGET)
-	pylint -E $(COVERAGE_TARGET)
-	pytest tests/test.py
