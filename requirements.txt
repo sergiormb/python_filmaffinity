@@ -34,5 +34,5 @@ singledispatch==3.4.0.3
 traitlets==4.3.2
 wcwidth==0.1.7
 wrapt==1.11
-certifi==2020.6.20
+certifi==2022.12.7
 user_agent==0.1.9 
