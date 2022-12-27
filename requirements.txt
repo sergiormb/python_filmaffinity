@@ -1,4 +1,4 @@
-setuptools==49.2.1
+setuptools==65.5.1
 aarpy==0.1
 appdirs==1.4.3
 astroid==2.4.0
