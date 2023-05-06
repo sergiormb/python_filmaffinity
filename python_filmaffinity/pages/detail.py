@@ -158,8 +158,9 @@ class DetailPage(Page):
         if not ac:
             return awards
         for i in ac.find_all("a"):
-            awards.append({'year': i.get_text(),
-                           'award': i.next_sibling[2:]})
+            if i.next_sibling is not None:
+                awards.append({'year': i.get_text(),
+                            'award': i.next_sibling[2:]})
         return awards
 
     def get_reviews(self):
