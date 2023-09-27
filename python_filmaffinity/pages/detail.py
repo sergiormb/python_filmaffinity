@@ -108,7 +108,7 @@ class DetailPage(Page):
             if dt.get_text() == 'Guion':
                 dd = dt.next_sibling.next_sibling
                 for nb in dd.find_all('span', {'class': 'nb'}):
-                    writers.append(nb.find('span').get_text())
+                    writers.append(nb.find('a').get_text())
         return writers
 
     def get_music(self):
@@ -117,8 +117,8 @@ class DetailPage(Page):
         for dt in self.soup.find_all('dt'):
             if dt.get_text() == 'Música':
                 dd = dt.next_sibling.next_sibling
-                for nb in dd.find_all('span', {'class': 'nb'}):
-                    music.append(nb.find('span').get_text())
+                for nb in dd.find_all('a', {'class': 'nb'}):
+                    music.append(nb.find('a').get_text())
         return music
 
     def get_cinematography(self):
@@ -128,7 +128,7 @@ class DetailPage(Page):
             if dt.get_text() == 'Fotografía':
                 dd = dt.next_sibling.next_sibling
                 for nb in dd.find_all('span', {'class': 'nb'}):
-                    cinematography.append(nb.find('span').get_text())
+                    cinematography.append(nb.find('a').get_text())
         return cinematography
 
     def get_producers(self):
@@ -137,7 +137,7 @@ class DetailPage(Page):
         dd = self.soup.find('dd', {'class': 'card-producer'})
         if dd:
             for nb in dd.find_all('span', {'class': 'nb'}):
-                producers.append(nb.find('span').get_text())
+                producers.append(nb.find('a').get_text())
         return producers
 
     def get_genre(self):
