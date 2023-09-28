@@ -213,7 +213,7 @@ recommend HBO, Netflix, Filmin, Movistar, Rakuten
 
 Changelog
 =========
-v0.0.19 (28-09-2023)
+v0.0.20 (28-09-2023)
 ********************
 
 - Scrapping updated
