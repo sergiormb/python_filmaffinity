@@ -60,9 +60,9 @@ class DetailPage(Page):
     def get_actors(self):
         """Get the actors."""
         actors = []
-        actors_cell = self.soup.find_all("span", {"itemprop": 'actor'})
+        actors_cell = self.soup.find_all("li", {"itemprop": 'actor'})
         for actor_cell in actors_cell:
-            actor = actor_cell.find("span", {"itemprop": 'name'})
+            actor = actor_cell.find("div", {"itemprop": 'name'})
             actors.append(actor.get_text())
         return actors
 
