@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-from .__meta__ import  *
+from .__meta__ import *
 from .client import Client
 from .config import FIELDS_TYPE
-
 
 class FilmAffinity(Client):
 

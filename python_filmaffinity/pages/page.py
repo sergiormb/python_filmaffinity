@@ -124,6 +124,9 @@ class Page(object):
 
     def get_year(self):
         """Get the year."""
+        cell_r = self.soup.find('div', {'class': 'ye-w'})
+        if cell_r:
+            return cell_r.text
         cell = self.soup.find('div', {'class': 'mc-data'})
         return cell.find_all('div')[0].get_text() if cell else self._get_year_from_title()
 

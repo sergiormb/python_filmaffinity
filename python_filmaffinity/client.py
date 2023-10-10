@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import logging
 
 import requests
 import requests_cache
@@ -141,6 +142,7 @@ class Client:
                     response = self.session.get(url, **kwargs)
         except requests.exceptions.ConnectionError as er:
             raise FilmAffinityConnectionError(er)
+        logging.warn(f"Filmaffinty Client: GET {url}")
         return response
 
     def _get_trailer(self, fa_id):
@@ -171,27 +173,124 @@ class Client:
         }
 
     def _get_movie_data(self, page, fa_id=None):
-        return {
-            'id': fa_id or page.get_id(),
-            'title': page.get_title(),
-            'original_title': page.get_original_title(),
-            'year': page.get_year(),
-            'duration': page.get_duration(),
-            'rating': page.get_rating(),
-            'votes': page.get_number_of_votes(),
-            'description': page.get_description(),
-            'directors': page.get_directors(),
-            'writers': page.get_writers(),
-            'music': page.get_music(),
-            'cinematography': page.get_cinematography(),
-            'actors': page.get_actors(),
-            'producers': page.get_producers(),
-            'poster': page.get_poster(),
-            'country': page.get_country(),
-            'genre': page.get_genre(),
-            'awards': page.get_awards(),
-            'reviews': page.get_reviews(),
+        result = {
+            'id': None,
+            'title': None,
+            'original_title': None,
+            'year': None,
+            'duration': None,
+            'rating': None,
+            'votes': None,
+            'description': None,
+            'directors': None,
+            'writers': None,
+            'music': None,
+            'cinematography': None,
+            'actors': None,
+            'producers': None,
+            'poster': None,
+            'country': None,
+            'genre': None,
+            'awards': None,
+            'reviews': None
         }
+        # Update the dictionary with values from functions, handling exceptions
+        try:
+            result['id'] = fa_id or page.get_id()
+        except Exception as e:
+            logging.warning(f"Id field not found: {e}")
+
+        try:
+            result['title'] = page.get_title()
+        except Exception as e:
+            logging.warning(f"Title field not found for {result.get('id')}: {e}")
+
+        try:
+            result['original_title'] = page.get_original_title()
+        except Exception as e:
+            logging.warning(f"Original title field not found for {result.get('id')}: {e}")
+
+        try:
+            result['year'] = page.get_year()
+        except Exception as e:
+            logging.warning(f"Year field not found for {result.get('id')}: {e}")
+
+        try:
+            result['duration'] = page.get_duration()
+        except Exception as e:
+            logging.warning(f"Duration field not found for {result.get('id')}: {e}")
+
+        try:
+            result['rating'] = page.get_rating()
+        except Exception as e:
+            logging.warning(f"Rating field not found for {result.get('id')}: {e}")
+
+        try:
+            result['votes'] = page.get_number_of_votes()
+        except Exception as e:
+            logging.warning(f"Votes field not found for {result.get('id')}: {e}")
+
+        try:
+            result['description'] = page.get_description()
+        except Exception as e:
+            logging.warning(f"Description field not found for {result.get('id')}: {e}")
+
+        try:
+            result['directors'] = page.get_directors()
+        except Exception as e:
+            logging.warning(f"Directors field not found for {result.get('id')}: {e}")
+
+        try:
+            result['writers'] = page.get_writers()
+        except Exception as e:
+            logging.warning(f"Writers field not found for {result.get('id')}: {e}")
+
+        try:
+            result['music'] = page.get_music()
+        except Exception as e:
+            logging.warning(f"Music field not found for {result.get('id')}: {e}")
+
+        try:
+            result['cinematography'] = page.get_cinematography()
+        except Exception as e:
+            logging.warning(f"Cinematography field not found for {result.get('id')}: {e}")
+
+        try:
+            result['actors'] = page.get_actors()
+        except Exception as e:
+            logging.warning(f"Actors field not found for {result.get('id')}: {e}")
+
+        try:
+            result['producers'] = page.get_producers()
+        except Exception as e:
+            logging.warning(f"Producers field not found for {result.get('id')}: {e}")
+
+        try:
+            result['poster'] = page.get_poster()
+        except Exception as e:
+            logging.warning(f"Poster field not found for {result.get('id')}: {e}")
+
+        try:
+            result['country'] = page.get_country()
+        except Exception as e:
+            logging.warning(f"Country field not found for {result.get('id')}: {e}")
+
+        try:
+            result['genre'] = page.get_genre()
+        except Exception as e:
+            logging.warning(f"Genre field not found for {result.get('id')}: {e}")
+
+        try:
+            result['awards'] = page.get_awards()
+        except Exception as e:
+            logging.warning(f"Awards field not found for {result.get('id')}: {e}")
+
+        try:
+            result['reviews'] = page.get_reviews()
+        except Exception as e:
+            logging.warning(f"Reviews field not found for {result.get('id')}: {e}")
+
+        return result
 
     def _get_movie_by_id(self, id, trailer=False, images=False):
         movie = {}
@@ -234,7 +333,7 @@ class Client:
             )
             class_ = TopPage
         if method == 'search':
-            movies_cell = soup.find_all("div", {"class": 'movie-card'})
+            movies_cell = soup.find_all("div", {"class": 'se-it'})
             class_ = SearchPage
         if method == 'top_service':
             movies_cell = soup.find_all("div", {"class": 'top-movie'})

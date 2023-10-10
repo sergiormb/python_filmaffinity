@@ -1,9 +1,18 @@
 """Page type: detail."""
+import re
+
 from .page import Page
 
 
 class DetailPage(Page):
     """Page type: detail."""
+
+    def get_id(self):
+        id_cell = self.soup.find("div", {"class": "rate-movie-box"})
+        if id_cell:
+            return int(id_cell.get("data-movie-id"))
+        return None
+
 
     def get_title(self):
         """Get the title."""
@@ -15,11 +24,13 @@ class DetailPage(Page):
 
     def get_original_title(self):
         """Get the original title."""
-        name = None
-        name_cell = self.soup.find("dl", {"class": 'movie-info'})
-        if name_cell:
-            name = name_cell.find('dd').get_text().strip()
-        return name
+        info_cell = self.soup.find("dl", {"class": 'movie-info'})
+        if info_cell:
+            original_title_cell = info_cell.find('dd')
+            inner_span_tag = original_title_cell.span
+            if inner_span_tag:
+                inner_span_tag.decompose()
+            return original_title_cell.text.strip()
 
     def get_year(self):
         """Get the year."""
@@ -43,8 +54,9 @@ class DetailPage(Page):
         if rating:
             try:
                 rating = str(rating['content'])
+                rating = float(re.sub(r"[^\d,.]", "" , rating).replace(',', '.'))
             except ValueError:
-                rating = None
+                rating = float(0)
         return rating
 
     def get_number_of_votes(self):
@@ -52,19 +64,23 @@ class DetailPage(Page):
         votes = self.soup.find("span", {"itemprop": 'ratingCount'})
         if votes:
             try:
-                votes = int(votes['content'])
+                votes = votes['content']
+                votes_checked = int(re.sub(r"[., ]", "", votes))
             except ValueError:
-                votes = None
-        return votes
+                votes_checked = None
+        return votes_checked
 
     def get_actors(self):
         """Get the actors."""
         actors = []
-        actors_cell = self.soup.find_all("span", {"itemprop": 'actor'})
-        for actor_cell in actors_cell:
-            actor = actor_cell.find("span", {"itemprop": 'name'})
-            actors.append(actor.get_text())
-        return actors
+        actors_cell = self.soup.find_all("li", {"itemprop": 'actor'})
+        try:
+            for actor_cell in actors_cell:
+                actor = actor_cell.find("div", {"itemprop": 'name'})
+                actors.append(actor.get_text())
+            return actors
+        except Exception as e:
+            return []
 
     def get_poster(self):
         """Get the poster."""
@@ -108,7 +124,7 @@ class DetailPage(Page):
             if dt.get_text() == 'Guion':
                 dd = dt.next_sibling.next_sibling
                 for nb in dd.find_all('span', {'class': 'nb'}):
-                    writers.append(nb.find('span').get_text())
+                    writers.append(nb.find('a').get_text())
         return writers
 
     def get_music(self):
@@ -117,8 +133,8 @@ class DetailPage(Page):
         for dt in self.soup.find_all('dt'):
             if dt.get_text() == 'Música':
                 dd = dt.next_sibling.next_sibling
-                for nb in dd.find_all('span', {'class': 'nb'}):
-                    music.append(nb.find('span').get_text())
+                for nb in dd.find_all('a', {'class': 'nb'}):
+                    music.append(nb.find('a').get_text())
         return music
 
     def get_cinematography(self):
@@ -128,7 +144,7 @@ class DetailPage(Page):
             if dt.get_text() == 'Fotografía':
                 dd = dt.next_sibling.next_sibling
                 for nb in dd.find_all('span', {'class': 'nb'}):
-                    cinematography.append(nb.find('span').get_text())
+                    cinematography.append(nb.find('a').get_text())
         return cinematography
 
     def get_producers(self):
@@ -137,7 +153,7 @@ class DetailPage(Page):
         dd = self.soup.find('dd', {'class': 'card-producer'})
         if dd:
             for nb in dd.find_all('span', {'class': 'nb'}):
-                producers.append(nb.find('span').get_text())
+                producers.append(nb.find('a').get_text())
         return producers
 
     def get_genre(self):
@@ -177,3 +193,4 @@ class DetailPage(Page):
                      "itemprop": 'reviewBody'}).get_text(),
                  'url': i.a['href'] if i.a else None})
         return reviews
+
