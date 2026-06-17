@@ -3,11 +3,13 @@
 
 import requests
 from bs4 import BeautifulSoup
-import random
+import os
 
 
 def get_random_proxy():
     proxy = {}
+    if os.getenv("FILMAFFINITY_USE_PROXIES") != "1":
+        return proxy
     try:
         response = requests.get("https://www.sslproxies.org/", verify=False)
         soup = BeautifulSoup(response.text, "html.parser")

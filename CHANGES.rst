@@ -1,6 +1,19 @@
 Changelog
 =========
 
+v0.0.21 (17-06-2026)
+********************
+
+- Updated scraping for the current FilmAffinity layout.
+- Replaced the deprecated user-agent dependency with an internal header pool.
+- Added fast parser tests and optional live integration tests.
+- Modernized packaging metadata and GitHub Actions.
+
+v0.0.20 (28-09-2023)
+********************
+
+- Scrapping updated
+
 v0.0.19 (22-06-2021)
 ********************
 

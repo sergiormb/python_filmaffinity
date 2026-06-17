@@ -5,16 +5,15 @@ __title__ = 'python_filmaffinity'
 __summary__ = 'Python wrapper for FilmAffinity'
 __url__ = 'https://github.com/sergiormb/python_filmaffinity'
 
-__version__ = '0.0.20'
+__version__ = '0.0.21'
 
 __install_requires__ = [
+    'beautifulsoup4>=4.9.1',
     'requests>=2.24.0',
-    'requests-cache>=0.5.2',
-    'bs4>=0.0.1',
-    'user_agent==0.1.9',
+    'requests-cache>=1.0.0',
 ]
 
 __author__ = 'sergiormb'
 __email__ = 'sergiormb88@gmail.com'
 
-__license__ = 'MIT License'
+__license__ = 'MIT'
