@@ -27,10 +27,13 @@ class DetailPage(Page):
         info_cell = self.soup.find("dl", {"class": 'movie-info'})
         if info_cell:
             original_title_cell = info_cell.find('dd')
+            if not original_title_cell:
+                return None
             inner_span_tag = original_title_cell.span
             if inner_span_tag:
                 inner_span_tag.decompose()
             return original_title_cell.text.strip()
+        return None
 
     def get_year(self):
         """Get the year."""
@@ -62,6 +65,7 @@ class DetailPage(Page):
     def get_number_of_votes(self):
         """Get the number of votes."""
         votes = self.soup.find("span", {"itemprop": 'ratingCount'})
+        votes_checked = None
         if votes:
             try:
                 votes = votes['content']
@@ -133,7 +137,7 @@ class DetailPage(Page):
         for dt in self.soup.find_all('dt'):
             if dt.get_text() == 'Música':
                 dd = dt.next_sibling.next_sibling
-                for nb in dd.find_all('a', {'class': 'nb'}):
+                for nb in dd.find_all('span', {'class': 'nb'}):
                     music.append(nb.find('a').get_text())
         return music
 
@@ -160,7 +164,8 @@ class DetailPage(Page):
         """Get the genre."""
         genres = []
         for i in self.soup.find_all("span", {"itemprop": 'genre'}):
-            genres.append(i.find('a').get_text())
+            link = i.find('a')
+            genres.append(link.get_text() if link else i.get_text().strip())
         return genres
 
     def get_awards(self):
@@ -174,8 +179,10 @@ class DetailPage(Page):
         if not ac:
             return awards
         for i in ac.find_all("a"):
+            award = ''.join(str(s) for s in i.next_siblings).strip()
+            award = award[2:] if award.startswith('- ') else award
             awards.append({'year': i.get_text(),
-                           'award': i.next_sibling[2:]})
+                           'award': award})
         return awards
 
     def get_reviews(self):
@@ -193,4 +200,3 @@ class DetailPage(Page):
                      "itemprop": 'reviewBody'}).get_text(),
                  'url': i.a['href'] if i.a else None})
         return reviews
-

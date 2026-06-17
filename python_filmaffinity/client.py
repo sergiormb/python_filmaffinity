@@ -7,7 +7,6 @@ import requests_cache
 import random
 
 from bs4 import BeautifulSoup
-from user_agent import generate_user_agent
 from inspect import getsourcefile
 from os.path import join, dirname, abspath
 from .config import FIELDS_MOVIE
@@ -24,6 +23,14 @@ except ImportError:
 
 current_folder = dirname(abspath(getsourcefile(lambda: 0)))
 supported_languages = ['en', 'es', 'mx', 'ar', 'cl', 'co']
+USER_AGENTS = [
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
+    '(KHTML, like Gecko) Chrome/125.0 Safari/537.36',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 14_5) AppleWebKit/605.1.15 '
+    '(KHTML, like Gecko) Version/17.5 Safari/605.1.15',
+    'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 '
+    '(KHTML, like Gecko) Chrome/125.0 Safari/537.36',
+]
 
 
 class Client:
@@ -82,16 +89,12 @@ class Client:
         self.cache_remove_expired = cache_remove_expired
         self.session = None
         self.session_headers = {
-            'User-Agent': generate_user_agent(
-                device_type="desktop", os=('mac', 'linux')
-            )
+            'User-Agent': random.choice(USER_AGENTS)
         }
 
     def _generate_new_session_headers(self):
         self.session_headers = {
-            'User-Agent': generate_user_agent(
-                device_type="desktop", os=('mac', 'linux')
-            )
+            'User-Agent': random.choice(USER_AGENTS)
         }
 
     def _get_cache_file(self, cache_path=None):
@@ -99,7 +102,7 @@ class Client:
         """
         c = None
         if self.cache_backend in ['memory']:
-            p = 'cache'
+            c = 'cache-film-affinity'
         elif cache_path:
             c = join(cache_path, "cache-film-affinity")
         else:
@@ -116,7 +119,16 @@ class Client:
             old_data_on_error=True
             )
         if self.cache_remove_expired:
-            self.session.remove_expired_responses()
+            if hasattr(self.session.cache, 'delete'):
+                self.session.cache.delete(expired=True)
+            else:
+                remove_expired = getattr(
+                    self.session, 'remove_expired_responses', None)
+                if remove_expired is None:
+                    remove_expired = getattr(
+                        self.session.cache, 'remove_expired_responses', None)
+                if remove_expired:
+                    remove_expired()
 
     def _load_url(self, url, headers=None, verify=None,
                   timeout=3, force_server_response=False):
@@ -142,7 +154,7 @@ class Client:
                     response = self.session.get(url, **kwargs)
         except requests.exceptions.ConnectionError as er:
             raise FilmAffinityConnectionError(er)
-        logging.warn(f"Filmaffinty Client: GET {url}")
+        logging.warning(f"Filmaffinty Client: GET {url}")
         return response
 
     def _get_trailer(self, fa_id):
@@ -155,7 +167,7 @@ class Client:
         url = self.url_images + str(fa_id)
         r = self._load_url(url)
         soup = BeautifulSoup(r.content, "html.parser")
-        exist = soup.findAll("div", {"id": 'main-image-wrapper'})
+        exist = soup.find_all("div", {"id": 'main-image-wrapper'})
         if not exist:
             return {
                 'posters': [],
@@ -328,15 +340,16 @@ class Client:
         soup = BeautifulSoup(page.content, "html.parser")
         if method == 'top':
             movies_list = soup.find("ul", {"id": 'top-movies'})
-            movies_cell = movies_list.find_all(
-                "li", {"class": None, "id": None}
-            )
+            movies_cell = movies_list.select(
+                ".movie-card[data-movie-id]"
+            ) if movies_list else []
             class_ = TopPage
         if method == 'search':
-            movies_cell = soup.find_all("div", {"class": 'se-it'})
+            movies_cell = soup.select(".movie-card[data-movie-id]")
             class_ = SearchPage
         if method == 'top_service':
-            movies_cell = soup.find_all("div", {"class": 'top-movie'})
+            wrapper = soup.select(".top-movie .movie-card[data-movie-id]")
+            movies_cell = wrapper or soup.select(".movie-card[data-movie-id]")
             class_ = TopServicePage
         for cell in movies_cell[:top]:
             page = class_(cell)
@@ -349,7 +362,9 @@ class Client:
         url = self.url + 'topcat.php?id=' + service
         page = self._load_url(url)
         soup = BeautifulSoup(page.content, "html.parser")
-        movies_cell = soup.find_all("div", {"class": 'movie-card'})
+        movies_cell = soup.select(".movie-card[data-movie-id]")
+        if not movies_cell:
+            return movie
         cell = random.choice(movies_cell)
         id = str(cell['data-movie-id'])
         movie = self._get_movie_by_id(id, trailer, images)

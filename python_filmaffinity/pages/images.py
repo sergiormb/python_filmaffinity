@@ -2,7 +2,8 @@
 import re
 from .page import Page
 pattern_thumbnail = re.compile(r'\((.*?)\)', re.IGNORECASE)
-pattern_country = re.compile(r'>País: </strong>(.*?)</div>')
+pattern_country = re.compile(r'>Pa[ií]s: </strong>(.*?)</div>')
+pattern_country_div = re.compile(r'<div>(.*?)</div>')
 
 
 class ImagesPage(Page):
@@ -18,15 +19,18 @@ class ImagesPage(Page):
         all_imgs = imgs_soup.find_all("div", {"class": 'colorbox-image'})
         imgs = []
         for i in all_imgs:
-            if hasattr(i, 'a'):
-                im = i.a['href']
+            link = i.find('a')
+            if link:
+                im = link.get('href')
                 th = None
-                country = pattern_country.search(i.a['title'])
-                if country:
-                    country = country.group(1)
-                if hasattr(i.a, 'div'):
-                    re_th = pattern_thumbnail.search(
-                        i.a.div['style'])
+                title = link.get('title') or link.get('data-bs-title') or ''
+                country = pattern_country.search(title)
+                if not country:
+                    country = pattern_country_div.search(title)
+                country = country.group(1) if country else None
+                div = link.find('div')
+                if div and div.get('style'):
+                    re_th = pattern_thumbnail.search(div['style'])
                     if re_th:
                         th = re_th.group(1)
                 imgs.append({'image': im,

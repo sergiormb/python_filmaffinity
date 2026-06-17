@@ -26,6 +26,14 @@ setup(
     packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*",
                                     "tests", "*tests*"]),
     install_requires=meta['__install_requires__'],
+    python_requires='>=3.9',
+    extras_require={
+        'dev': [
+            'build>=1.0',
+            'pytest>=8.0',
+            'twine>=5.0',
+        ],
+    },
     zip_safe=False,
     # use the URL to the github repo
     download_url='https://github.com/sergiormb/python_filmaffinity/tarball/' \
@@ -36,11 +44,13 @@ setup(
         'Intended Audience :: Developers',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.2',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4'
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
+        'Programming Language :: Python :: 3.13',
+        'Programming Language :: Python :: 3.14'
     ]
 )
