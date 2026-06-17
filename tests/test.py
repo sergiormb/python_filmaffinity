@@ -1,10 +1,15 @@
+import csv
+import importlib
+import json
 import os
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
 
 import python_filmaffinity
 import python_filmaffinity.__meta__ as meta_test
+from python_filmaffinity import cli
 from python_filmaffinity.config import FIELDS_PAGE_DETAIL, FIELDS_PAGE_MOVIES
 from python_filmaffinity.exceptions import (
     FilmAffinityConnectionError,
@@ -13,100 +18,11 @@ from python_filmaffinity.exceptions import (
 )
 
 
-CARD_HTML = """
-<div class="fa-card">
-  <div class="row movie-card movie-card-1" data-movie-id="867354">
-    <div class="mc-poster">
-      <img src="/images/empty.gif"
-           data-srcset="https://pics.filmaffinity.com/a-msmall.jpg 150w,
-                        https://pics.filmaffinity.com/a-large.jpg 400w">
-    </div>
-    <div class="mc-title">
-      <a href="/es/film867354.html">El caballero oscuro</a>
-    </div>
-    <img class="nflag" alt="Estados Unidos">
-    <span class="mc-year">2008</span>
-    <div class="avg">8,1</div>
-    <div class="count">158.246 <i></i></div>
-    <div class="duration">152 min.</div>
-    <a class="genre">Accion</a>
-    <a class="synop-text">Batman se enfrenta al Joker.</a>
-    <div class="mc-director">
-      <span class="nb"><a title="Christopher Nolan">Christopher Nolan</a></span>
-    </div>
-    <div class="mc-cast">
-      <span class="nb"><a title="Christian Bale">Christian Bale</a></span>
-      <span class="nb"><a title="Heath Ledger">Heath Ledger</a></span>
-    </div>
-  </div>
-</div>
-"""
+FIXTURES = Path(__file__).parent / "fixtures"
 
-SEARCH_HTML = f"""
-<html><body>
-  <li class="se-it">{CARD_HTML}</li>
-</body></html>
-"""
 
-TOP_HTML = f"""
-<html><body>
-  <ul id="top-movies">
-    <li class="content">{CARD_HTML}</li>
-  </ul>
-</body></html>
-"""
-
-SERVICE_HTML = f"""
-<html><body>
-  <li class="top-movie first">{CARD_HTML}</li>
-</body></html>
-"""
-
-DETAIL_HTML = """
-<html><body>
-  <div class="z-movie">
-    <div class="rate-movie-box" data-movie-id="197671"></div>
-    <span itemprop="name">Piratas del Caribe: La venganza de Salazar</span>
-    <dl class="movie-info">
-      <dd><span>Titulo original</span>Pirates of the Caribbean</dd>
-      <dt>Guion</dt><dd><span class="nb"><a>Jeff Nathanson</a></span></dd>
-      <dt>Musica</dt><dd><span class="nb"><a>Geoff Zanelli</a></span></dd>
-      <dt>Fotografia</dt><dd><span class="nb"><a>Paul Cameron</a></span></dd>
-    </dl>
-    <dd itemprop="datePublished">2017</dd>
-    <dd itemprop="duration">129 min.</dd>
-    <dd itemprop="description">Jack Sparrow vuelve al mar.</dd>
-    <div id="movie-rat-avg" content="6,2"></div>
-    <span itemprop="ratingCount" content="68.397"></span>
-    <span itemprop="director"><span itemprop="name">Joachim Ronning</span></span>
-    <li itemprop="actor"><div itemprop="name">Johnny Depp</div></li>
-    <img itemprop="image" src="https://pics.filmaffinity.com/poster.jpg">
-    <span id="country-img"><img alt="Estados Unidos"></span>
-    <span itemprop="genre"><a>Aventuras</a></span>
-    <dd class="card-producer"><span class="nb"><a>Jerry Bruckheimer</a></span></dd>
-    <dd class="award"><a>2017</a> - Premio de prueba</dd>
-    <div class="pro-review">
-      <div itemprop="author">Critico</div>
-      <div itemprop="reviewBody">Una critica.</div>
-      <a href="https://example.com/review">Review</a>
-    </div>
-  </div>
-</body></html>
-"""
-
-IMAGES_HTML = """
-<html><body>
-  <div id="main-image-wrapper"></div>
-  <div id="type_imgs_2">
-    <div class="colorbox-image">
-      <a href="https://pics.filmaffinity.com/poster-large.jpg"
-         title="<strong>Pais: </strong>Espana</div>">
-        <div style="background-image: url(https://pics.filmaffinity.com/thumb.jpg)"></div>
-      </a>
-    </div>
-  </div>
-</body></html>
-"""
+def fixture(name):
+    return (FIXTURES / name).read_text(encoding="utf-8")
 
 
 def response(html):
@@ -128,22 +44,65 @@ def assert_movie_list_shape(movies, exact_fixture=True):
 
 def test_search_parses_current_movie_cards(monkeypatch):
     service = python_filmaffinity.FilmAffinity(cache_backend="memory")
-    monkeypatch.setattr(service, "_load_url", lambda *args, **kwargs: response(SEARCH_HTML))
+    monkeypatch.setattr(
+        service, "_load_url", lambda *args, **kwargs: response(fixture("search.html"))
+    )
 
     assert_movie_list_shape(service.search(title="Batman"))
 
 
+def test_search_can_return_pydantic_models(monkeypatch):
+    pytest.importorskip("pydantic")
+    service = python_filmaffinity.FilmAffinity(cache_backend="memory")
+    monkeypatch.setattr(
+        service, "_load_url", lambda *args, **kwargs: response(fixture("search.html"))
+    )
+
+    movies = service.search(title="Batman", as_model=True)
+
+    assert movies[0].id == "867354"
+    assert movies[0].title == "El caballero oscuro"
+
+
+def test_as_model_requires_pydantic(monkeypatch):
+    models = importlib.import_module("python_filmaffinity.models")
+    monkeypatch.setattr(models, "BaseModel", None)
+
+    with pytest.raises(ImportError, match=r"python-filmaffinity\[models\]"):
+        models.movie_to_model({"id": "1"})
+
+
+def test_as_model_fails_before_request_when_pydantic_is_missing(monkeypatch):
+    models = importlib.import_module("python_filmaffinity.models")
+    monkeypatch.setattr(models, "BaseModel", None)
+    service = python_filmaffinity.FilmAffinity(cache_backend="memory")
+    monkeypatch.setattr(
+        service,
+        "_load_url",
+        lambda *args, **kwargs: pytest.fail("as_model should fail before requests"),
+    )
+
+    with pytest.raises(ImportError, match=r"python-filmaffinity\[models\]"):
+        service.get_movie(id="197671", as_model=True)
+
+
 def test_top_filmaffinity_parses_current_cards(monkeypatch):
     service = python_filmaffinity.FilmAffinity(cache_backend="memory")
-    monkeypatch.setattr(service, "_load_url", lambda *args, **kwargs: response(TOP_HTML))
+    monkeypatch.setattr(
+        service, "_load_url", lambda *args, **kwargs: response(fixture("top.html"))
+    )
 
     assert_movie_list_shape(service.top_filmaffinity())
 
 
 def test_top_service_and_recommend_parse_current_cards(monkeypatch):
     service = python_filmaffinity.FilmAffinity(cache_backend="memory")
-    monkeypatch.setattr(service, "_load_url", lambda *args, **kwargs: response(SERVICE_HTML))
-    monkeypatch.setattr(service, "_get_movie_by_id", lambda id, trailer=False, images=False: {"id": id})
+    monkeypatch.setattr(
+        service, "_load_url", lambda *args, **kwargs: response(fixture("service.html"))
+    )
+    monkeypatch.setattr(
+        service, "_get_movie_by_id", lambda id, trailer=False, images=False: {"id": id}
+    )
 
     assert_movie_list_shape(service.top_netflix())
     assert service.recommend_netflix() == {"id": "867354"}
@@ -154,8 +113,8 @@ def test_get_movie_by_id_with_images(monkeypatch):
 
     def fake_load_url(url, *args, **kwargs):
         if "filmimages.php" in url:
-            return response(IMAGES_HTML)
-        return response(DETAIL_HTML)
+            return response(fixture("images.html"))
+        return response(fixture("detail.html"))
 
     monkeypatch.setattr(service, "_load_url", fake_load_url)
     movie = service.get_movie(id="197671", images=True)
@@ -167,6 +126,86 @@ def test_get_movie_by_id_with_images(monkeypatch):
     assert movie["votes"] == 68397
     assert movie["country"] == "Estados Unidos"
     assert movie["images"]["posters"][0]["image"].endswith("poster-large.jpg")
+
+
+def test_get_movie_can_return_pydantic_model(monkeypatch):
+    pytest.importorskip("pydantic")
+    service = python_filmaffinity.FilmAffinity(cache_backend="memory")
+    monkeypatch.setattr(
+        service, "_load_url", lambda *args, **kwargs: response(fixture("detail.html"))
+    )
+
+    movie = service.get_movie(id="197671", as_model=True)
+
+    assert movie.id == "197671"
+    assert movie.title == "Piratas del Caribe: La venganza de Salazar"
+
+
+def test_export_helpers(tmp_path):
+    data = [{"id": "867354", "title": "El caballero oscuro", "rating": 8.1}]
+
+    assert json.loads(python_filmaffinity.to_json(data))[0]["id"] == "867354"
+
+    csv_path = tmp_path / "movies.csv"
+    python_filmaffinity.to_csv(data, csv_path)
+    with csv_path.open(encoding="utf-8") as file_handle:
+        rows = list(csv.DictReader(file_handle))
+    assert rows[0]["title"] == "El caballero oscuro"
+
+    markdown = python_filmaffinity.to_markdown(data)
+    assert "| id | rating | title |" in markdown
+    assert "El caballero oscuro" in markdown
+
+
+def test_default_sqlite_cache_uses_user_cache(monkeypatch, tmp_path):
+    monkeypatch.setenv("XDG_CACHE_HOME", str(tmp_path))
+    service = python_filmaffinity.FilmAffinity(cache_backend="sqlite")
+
+    assert service.cache_path.startswith(str(tmp_path))
+    assert "python-filmaffinity" in service.cache_path
+    assert "python_filmaffinity/cache-film-affinity" not in service.cache_path
+
+
+class FakeFilmAffinity:
+    def __init__(self, lang="es", cache_backend="sqlite"):
+        self.lang = lang
+        self.cache_backend = cache_backend
+
+    def search(self, title, top=10):
+        return [{"id": "867354", "title": title, "year": "2008", "rating": 8.1}]
+
+    def get_movie(self, id, images=False, trailer=False):
+        return [{"id": id, "title": "Movie", "year": "2017", "rating": 6.2}][0]
+
+    def top_filmaffinity(self, top=10):
+        return [{"id": "809297", "title": "El padrino", "year": "1972", "rating": 9.0}]
+
+
+def test_cli_search_json(monkeypatch, capsys):
+    monkeypatch.setattr(cli, "FilmAffinity", FakeFilmAffinity)
+
+    assert cli.main(["search", "Batman", "--top", "1", "--json"]) == 0
+
+    output = json.loads(capsys.readouterr().out)
+    assert output[0]["title"] == "Batman"
+
+
+def test_cli_movie_table(monkeypatch, capsys):
+    monkeypatch.setattr(cli, "FilmAffinity", FakeFilmAffinity)
+
+    assert cli.main(["movie", "197671"]) == 0
+
+    output = capsys.readouterr().out
+    assert "TITLE" in output
+    assert "Movie" in output
+
+
+def test_cli_top(monkeypatch, capsys):
+    monkeypatch.setattr(cli, "FilmAffinity", FakeFilmAffinity)
+
+    assert cli.main(["top", "--kind", "filmaffinity", "--top", "1"]) == 0
+
+    assert "El padrino" in capsys.readouterr().out
 
 
 def test_invalid_language():

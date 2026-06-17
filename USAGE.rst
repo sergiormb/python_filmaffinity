@@ -42,6 +42,7 @@ search
 .. code-block:: python
 
     movies = service.search(cast='Nicolas Cage')
+    movie_models = service.search(title='Batman', as_model=True)
 
 
 get_movie
@@ -65,6 +66,32 @@ get_movie
 
     movies = service.get_movie(title='Avatar')
     movies = service.get_movie(id='495280')
+    movie_model = service.get_movie(id='495280', as_model=True)
+
+
+exporters
+*********
+
+- Example
+
+.. code-block:: python
+
+    movies = service.search(title='Batman')
+    python_filmaffinity.to_json(movies, 'movies.json')
+    python_filmaffinity.to_csv(movies, 'movies.csv')
+    python_filmaffinity.to_markdown(movies, 'movies.md')
+
+
+command line
+************
+
+- Example
+
+.. code-block:: bash
+
+    filmaffinity search "Batman" --top 5
+    filmaffinity movie 197671 --images --json
+    filmaffinity top --kind filmaffinity --top 10
 
 
 top_filmaffinity
