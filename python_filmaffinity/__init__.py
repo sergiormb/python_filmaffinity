@@ -2,10 +2,12 @@
 from .__meta__ import *
 from .client import Client
 from .config import FIELDS_TYPE
+from .exporters import to_csv, to_json, to_markdown
+from .models import _require_pydantic, movie_to_model, movies_to_models
 
 class FilmAffinity(Client):
 
-    def get_movie(self, trailer=False, images=False, **kwargs):
+    def get_movie(self, trailer=False, images=False, as_model=False, **kwargs):
         """Return a dictionary with the data of the movie.
 
         Args:
@@ -16,6 +18,8 @@ class FilmAffinity(Client):
         Returns:
             TYPE: Dictionary with movie data
         """
+        if as_model:
+            _require_pydantic()
         movie = {}
         if kwargs is not None:
             for key, value in iter(kwargs.items()):
@@ -25,9 +29,9 @@ class FilmAffinity(Client):
                 else:
                     movie = self._get_movie_by_args(
                         key, value, trailer, images)
-        return movie
+        return movie_to_model(movie) if as_model else movie
 
-    def search(self, top=10, **kwargs):
+    def search(self, top=10, as_model=False, **kwargs):
         """Return a list with the data of the movies.
 
         Args:
@@ -57,6 +61,8 @@ class FilmAffinity(Client):
         Returns:
             TYPE: Lis with movies data
         """
+        if as_model:
+            _require_pydantic()
         top = 20 if top > 20 else top
         movies = []
         if kwargs is not None:
@@ -84,7 +90,7 @@ class FilmAffinity(Client):
                 url = self.url + 'advsearch.php?' + options
                 page = self._load_url(url)
                 movies = self._return_list_movies(page, 'search', top)
-        return movies
+        return movies_to_models(movies) if as_model else movies
 
     def top_filmaffinity(self, top=10, **kwargs):
         """Return a list with the top filmaffinity movies.

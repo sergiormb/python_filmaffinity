@@ -8,7 +8,7 @@ This is a simple python scraping for the FilmAffinity.
     :target: https://github.com/sergiormb/python_filmaffinity/actions/workflows/python-test.yml?query=branch%3Amaster
 .. image:: https://img.shields.io/github/license/mashape/apistatus.svg   
     :target: https://github.com/sergiormb/python_filmaffinity/blob/master/LICENSE.rst
-.. image:: https://img.shields.io/pypi/pyversions/Django.svg   
+.. image:: https://img.shields.io/pypi/pyversions/python-filmaffinity.svg
     :target: https://pypi.python.org/pypi/python_filmaffinity/
 .. image:: https://readthedocs.org/projects/python-filmaffinity/badge/?version=latest
     :target: http://python-filmaffinity.readthedocs.io/en/latest/?badge=latest
@@ -23,6 +23,12 @@ Pip
 
     pip install python-filmaffinity
 
+Optional Pydantic models:
+
+::
+
+    pip install "python-filmaffinity[models]"
+
 
 From Source
 ***********
@@ -31,7 +37,7 @@ From Source
 
     git clone git@github.com:sergiormb/python_filmaffinity.git
     cd python_filmaffinity
-    python setup.py install
+    python -m pip install -e ".[dev]"
 
 
 Requirements
@@ -39,9 +45,14 @@ Requirements
 
 ::
 
-    requests >= 2.0.1
-    requests-cache >= 0.4.13
-    bs4 >= 0.0.1
+    beautifulsoup4 >= 4.9.1
+    requests >= 2.24.0
+    requests-cache >= 1.0.0
+
+Python 3.9 or newer is required.
+
+FilmAffinity does not provide a public API for this package. The library uses
+HTML scraping, so selectors can break when FilmAffinity changes its layout.
 
 
 Examples
@@ -60,6 +71,53 @@ Examples
     ['Daniel Monzón']
     movie['actors']
     ['Luis Tosar', 'Alberto Ammann', 'Antonio Resines', 'Carlos Bardem', 'Marta Etura', 'Vicente Romero', 'Manuel Morón', 'Manolo Solo', 'Fernando Soto', 'Luis Zahera', 'Patxi Bisquert', 'Félix Cubero', 'Josean Bengoetxea', 'Juan Carlos Mangas', 'Jesús Carroza']
+
+
+Optional models and exporters
+*****************************
+
+The public API keeps returning dictionaries by default. Install the ``models``
+extra and pass ``as_model=True`` to receive Pydantic models:
+
+.. code-block:: python
+
+    service = python_filmaffinity.FilmAffinity()
+    movie = service.get_movie(id='495280', as_model=True)
+    movie.title
+
+Export helpers accept dictionaries, lists and models:
+
+.. code-block:: python
+
+    movies = service.search(title='Batman')
+    python_filmaffinity.to_json(movies, 'movies.json')
+    python_filmaffinity.to_csv(movies, 'movies.csv')
+    python_filmaffinity.to_markdown(movies, 'movies.md')
+
+
+Command line
+************
+
+.. code-block:: bash
+
+    filmaffinity search "Batman" --top 5
+    filmaffinity movie 197671 --images --json
+    filmaffinity top --kind filmaffinity --top 10
+
+
+Development
+***********
+
+.. code-block:: bash
+
+    python -m pip install -e ".[dev]"
+    python -m pytest
+    RUN_INTEGRATION=1 python -m pytest -m integration
+    python -m build
+    twine check dist/*
+
+The persistent sqlite cache is stored in the user's cache directory by default.
+Use ``cache_backend="memory"`` for runs that should not write to disk.
 
 
 Usage
@@ -213,6 +271,15 @@ recommend HBO, Netflix, Filmin, Movistar, Rakuten
 
 Changelog
 =========
+v0.1.0 (17-06-2026)
+*******************
+
+- Added the ``filmaffinity`` command line interface.
+- Added optional Pydantic models via ``as_model=True``.
+- Added JSON, CSV and Markdown export helpers.
+- Moved the default persistent cache to the user's cache directory.
+- Renamed the PyPI publishing workflow to ``publish-to-pypi.yml``.
+
 v0.0.21 (17-06-2026)
 ********************
 

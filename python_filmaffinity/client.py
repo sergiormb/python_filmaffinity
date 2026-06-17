@@ -8,7 +8,8 @@ import random
 
 from bs4 import BeautifulSoup
 from inspect import getsourcefile
-from os.path import join, dirname, abspath
+from os import makedirs, getenv, name as os_name
+from os.path import join, dirname, abspath, expanduser
 from .config import FIELDS_MOVIE
 from .pages import DetailPage, SearchPage, TopPage, TopServicePage, ImagesPage
 from .exceptions import (
@@ -106,7 +107,13 @@ class Client:
         elif cache_path:
             c = join(cache_path, "cache-film-affinity")
         else:
-            c = join(current_folder, "cache-film-affinity")
+            if os_name == "nt":
+                cache_dir = getenv("LOCALAPPDATA") or expanduser("~\\AppData\\Local")
+            else:
+                cache_dir = getenv("XDG_CACHE_HOME") or join(expanduser("~"), ".cache")
+            c = join(cache_dir, "python-filmaffinity", "cache-film-affinity")
+        if c and self.cache_backend not in ['memory']:
+            makedirs(dirname(c), exist_ok=True)
         return c
 
     def _get_requests_session(self):

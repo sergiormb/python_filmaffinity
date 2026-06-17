@@ -28,10 +28,19 @@ setup(
     install_requires=meta['__install_requires__'],
     python_requires='>=3.9',
     extras_require={
+        'models': [
+            'pydantic>=1.10',
+        ],
         'dev': [
             'build>=1.0',
+            'pydantic>=1.10',
             'pytest>=8.0',
             'twine>=5.0',
+        ],
+    },
+    entry_points={
+        'console_scripts': [
+            'filmaffinity=python_filmaffinity.cli:main',
         ],
     },
     zip_safe=False,

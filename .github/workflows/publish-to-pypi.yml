@@ -1,6 +1,7 @@
 name: Publish Python Package
 
 on:
+  workflow_dispatch:
   release:
     types: [created]
 
@@ -24,5 +25,5 @@ jobs:
     - name: Check distributions
       run: twine check dist/*
     - name: Publish
-      if: ${{ vars.PUBLISH_TO_PYPI == 'true' }}
+      if: ${{ github.event_name == 'release' && vars.PUBLISH_TO_PYPI == 'true' }}
       uses: pypa/gh-action-pypi-publish@release/v1

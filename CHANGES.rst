@@ -1,6 +1,18 @@
 Changelog
 =========
 
+v0.1.0 (17-06-2026)
+*******************
+
+- Added the ``filmaffinity`` command line interface.
+- Added optional Pydantic models via ``as_model=True`` and
+  ``python-filmaffinity[models]``.
+- Added JSON, CSV and Markdown export helpers.
+- Moved the default persistent cache to the user's cache directory.
+- Moved parser tests to reusable HTML fixtures.
+- Renamed the PyPI publishing workflow to ``publish-to-pypi.yml`` and added
+  manual build/check runs.
+
 v0.0.21 (17-06-2026)
 ********************
 
