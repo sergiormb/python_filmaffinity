@@ -161,7 +161,7 @@ class Client:
                     response = self.session.get(url, **kwargs)
         except requests.exceptions.ConnectionError as er:
             raise FilmAffinityConnectionError(er)
-        logging.warning(f"Filmaffinty Client: GET {url}")
+        logging.warning(f"Filmaffinity Client: GET {url}")
         return response
 
     def _get_trailer(self, fa_id):
